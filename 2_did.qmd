@@ -1,0 +1,322 @@
+```{r echo = FALSE, include=FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+library(fixest)
+library(did)
+library(DRDID)
+library(HonestDiD)
+
+here::i_am("2_did.qmd")
+options(box.path = here::here())
+box::use(./functions)
+box::reload(functions)
+
+df_intensive <- readRDS("data/df_intensive.rds")
+df_extensive <- readRDS("data/df_extensive.rds")
+```
+
+# Intensive Margin
+
+## Job income (log)
+
+```{r}
+functions$plot_mean(df_intensive, "log_jobincome")
+```
+
+```{r}
+# run_feols(df_intensive, "log_jobincome", F) |>
+#   iplot()
+# run_feols(df_intensive, "log_jobincome", T) |>
+#   iplot()
+
+m1 <- functions$run_ols(df_intensive, "log_jobincome", F, F)
+m2 <- functions$run_ols(df_intensive, "log_jobincome", T, F)
+functions$plot_event_study(m1, m2)
+
+# modelsummary::modelsummary(list(m1, m2), vcov = "HC", coef_omit = "^(?!eligible:period)", gof_omit = "BIC|AIC")
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T)
+# sensitivity_check(m1, relativeMagnitudes = F)
+```
+
+```{r}
+te_log_jobincome <- functions$run_all_regressions("log_jobincome", df_intensive)
+te_log_jobincome
+```
+
+```{r}
+cs_jobincome <- functions$run_cs(
+  data = df_intensive,
+  outcome = "log_jobincome",
+  xfm = "~ schooling + civilstatus + urb",
+  est_method = "dr"
+)
+
+summary(cs_jobincome)
+
+aggte(cs_jobincome, type = "dynamic") |>
+  ggdid()  +
+  ggtitle("Log of job income (Callaway and Sant'Anna, 2021)") +
+  theme_bw()
+```
+
+## Total Income
+
+```{r}
+functions$plot_mean(df_intensive, "log_totalincome")
+```
+
+```{r}
+m1 <- functions$run_ols(df_intensive, "log_totalincome", F, F)
+m2 <- functions$run_ols(df_intensive, "log_totalincome", T, F)
+functions$plot_event_study(m1, m2)
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T)
+# sensitivity_check(m1, relativeMagnitudes = F)
+```
+
+```{r}
+te_log_totalincome <- functions$run_all_regressions("log_totalincome", df_intensive)
+te_log_totalincome
+```
+
+## Working hours
+
+-   Restrict the sample by those with positive, but less than 80 working hours
+
+```{r}
+functions$plot_mean(df_intensive |>
+                      filter(hours > 0 & hours <= 80), "log_hours")
+```
+
+```{r}
+# FE-OLS
+# run_feols(
+#   df_intensive |>
+#     filter(hours > 0 & hours <= 80),
+#   "log(hours)", F) |>
+#   iplot()
+# run_feols(
+#   df_intensive |>
+#     filter(hours > 0 & hours <= 80),
+#   "log(hours)", T) |>
+#   iplot()
+
+# OLS
+m1 <- functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", F)
+m2 <- functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", T)
+functions$plot_event_study(m1, m2)
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T)
+# sensitivity_check(m1, relativeMagnitudes = F)
+```
+
+```{r}
+te_log_hours <- functions$run_all_regressions(
+  "log_hours", 
+  df_intensive |> filter(hours > 0 & hours <= 80)
+)
+te_log_hours
+```
+
+```{r}
+cs_workinghours <- functions$run_cs(
+  df_intensive |>
+    filter(hours > 0 & hours <= 80),
+  "log_hours",
+  xfm = "~ schooling + civilstatus + urb",
+  est_method = "dr"
+)
+
+summary(cs_workinghours)
+# aggte(cs_workinghours, type = "simple")
+
+aggte(cs_workinghours, type = "dynamic") |>
+  ggdid()  +
+  ggtitle("Log of working hours (Callaway and Sant'Anna, 2021)") +
+  theme_bw()
+```
+
+# Extensive Margin
+
+## Labor force participation
+
+```{r}
+functions$plot_mean(df_extensive, "lfp")
+```
+
+```{r}
+# run_feols(df_extensive, "lfp", F) |> 
+#   iplot()
+# run_feols(df_extensive, "lfp", T) |> 
+#   iplot()
+
+m1 <- functions$run_ols(df_extensive, "lfp", F)
+m2 <- functions$run_ols(df_extensive, "lfp", T)
+functions$plot_event_study(m1, m2)
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T) |> print()
+# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+```
+
+```{r}
+te_lfp <- functions$run_all_regressions("lfp", df_extensive)
+te_lfp
+```
+
+```{r}
+cs_lfp <- functions$run_cs(
+  df_extensive,
+  "lfp",
+  xfm = "~ schooling + civilstatus + urb",
+  est_method = "dr"
+)
+
+summary(cs_lfp)
+# aggte(cs_lfp, type = "simple")
+
+aggte(cs_lfp, type = "dynamic") |>
+  ggdid()  +
+  ggtitle("LFP (Callaway and Sant'Anna, 2021)") +
+  theme_bw()
+```
+
+## Employment
+
+```{r}
+functions$plot_mean(df_extensive, "employment")
+```
+
+```{r}
+# run_feols(df_extensive, "employment", F) |> 
+#   iplot()
+# run_feols(df_extensive, "employment", T) |> 
+#   iplot()
+
+m1 <- functions$run_ols(df_extensive, "employment", F)
+m2 <- functions$run_ols(df_extensive, "employment", T)
+functions$plot_event_study(m1, m2)
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T) |> print()
+# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+```
+
+```{r}
+te_employment <- functions$run_all_regressions("employment", df_extensive)
+te_employment
+```
+
+```{r}
+cs_employment <- functions$run_cs(
+  df_extensive,
+  "employment",
+  xfm = "~ schooling + civilstatus + urb",
+  est_method = "dr"
+)
+
+summary(cs_employment)
+
+# aggte(cs_employment, type = "simple")
+
+aggte(cs_employment, type = "dynamic") |>
+  ggdid()  +
+  ggtitle("Employment (Callaway and Sant'Anna, 2021)") +
+  theme_bw()
+```
+
+## Unemployment
+
+```{r}
+# run_feols(df_extensive, "unemployment", F) |> 
+#   iplot()
+# run_feols(df_extensive, "unemployment", T) |> 
+#   iplot()
+
+m1 <- functions$run_ols(df_extensive, "unemployment", F)
+m2 <- functions$run_ols(df_extensive, "unemployment", T)
+functions$plot_event_study(m1, m2)
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T) |> print()
+# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+```
+
+```{r}
+te_unemployment <- functions$run_all_regressions("unemployment", df_extensive)
+te_unemployment
+```
+
+```{r}
+cs_unemployment <- functions$run_cs(
+  df_extensive,
+  "unemployment",
+  xfm = "~ schooling + civilstatus + urb",
+  est_method = "dr"
+)
+
+summary(cs_unemployment)
+
+# aggte(cs_unemployment, type = "simple")
+
+aggte(cs_unemployment, type = "dynamic") |>
+  ggdid()  +
+  ggtitle("Unemployment (Callaway and Sant'Anna, 2021)") +
+  theme_bw()
+```
+
+## Contract
+
+```{r}
+functions$plot_mean(df_extensive, "contract")
+```
+
+```{r}
+# run_feols(df_extensive, "contract", F) |> 
+#   iplot()
+# run_feols(df_extensive, "contract", T) |> 
+#   iplot()
+
+m1 <- functions$run_ols(df_extensive, "contract", F)
+m2 <- functions$run_ols(df_extensive, "contract", T)
+functions$plot_event_study(m1, m2)
+```
+
+```{r}
+# sensitivity_check(m1, relativeMagnitudes = T) |> print()
+# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+```
+
+```{r}
+te_contract <- functions$run_all_regressions("contract", df_extensive)
+te_contract
+```
+
+```{r}
+cs_contract <- functions$run_cs(
+  df_extensive,
+  "contract",
+  xfm = "~ schooling + civilstatus + urb",
+  est_method = "dr"
+)
+
+summary(cs_contract)
+
+# aggte(cs_contract, type = "simple")
+
+aggte(cs_contract, type = "dynamic") |>
+  ggdid()  +
+  ggtitle("Contract (Callaway and Sant'Anna, 2021)") +
+  theme_bw()
+```

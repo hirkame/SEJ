@@ -1,0 +1,256 @@
+#' @export
+run_ols <- function(data, outcome, control = FALSE, linear_pretrend = FALSE) {
+  if (control == FALSE & linear_pretrend == FALSE) {
+    fml <- stats::as.formula(paste0(outcome, "~ eligible*period"))
+  } else if (control == FALSE & linear_pretrend == TRUE) {
+    fml <- stats::as.formula(paste0(outcome, "~ eligible*period + eligible:lineartrend"))
+  } else if (control == TRUE & linear_pretrend == FALSE) {
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + schooling + I(schooling^2) + civilstatus + region*urb"))
+  } else {
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + eligible:lineartrend + schooling + I(schooling^2) + civilstatus + region*urb"))
+  }
+  
+  mod <- stats::lm(
+    fml, 
+    data = data, 
+    # weights = expr
+  )
+  
+  return(mod)
+}
+
+# Extract coefficients and confidence intervals for the OLS
+#' @export
+prep_event_study_plot <- function(model) {
+  
+  df_model <- stats::coef(summary(model))
+  
+  df_model <- data.frame(
+    period = row.names(df_model),
+    estimate = df_model[, "Estimate"],
+    std_error = df_model[, "Std. Error"],
+    conf_low = df_model[, "Estimate"] - 1.96 * df_model[, "Std. Error"],
+    conf_high = df_model[, "Estimate"] + 1.96 * df_model[, "Std. Error"], 
+    row.names = NULL
+  ) |>
+    dplyr::filter(stringr::str_detect(period, "eligible:period")) |> 
+    dplyr::mutate(period = stringr::str_replace(period, "eligible:period", "") |> as.numeric()) |> 
+    dplyr::add_row(period = 0, estimate = 0, conf_low = 0, conf_high = 0)
+  
+  return(df_model)
+}
+
+#' @export
+plot_event_study <- function(mod1, mod2) {
+  event_study_plot <- rbind(
+    prep_event_study_plot(mod1) |>
+      dplyr::mutate(model = "1. No Control"),
+    prep_event_study_plot(mod2) |>
+      dplyr::mutate(model = "2. Control")
+  )
+  
+  g <- ggplot2::ggplot(event_study_plot, ggplot2::aes(x = period, y = estimate, ymin = conf_low, ymax = conf_high)) +
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
+    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", colour = "gray") +
+    ggplot2::geom_errorbar(width = 0.4) +
+    ggplot2::geom_point() +
+    ggplot2::facet_wrap(. ~ model) +
+    ggplot2::labs(x = "Period", y = "Coefficient", title = paste0(summary(mod1)[["terms"]][[2]], " (OLS)")) + 
+    ggplot2::theme_bw()
+  
+  return(g)
+}
+
+#' @export
+run_feols <- function(data, outcome, control = TRUE) {
+  if (control == FALSE) {
+    mod <- feols(
+      stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + eligible:lineartrend | period")), 
+      data, 
+      # weights = data$expr,
+      "iid"
+    )
+  } else {
+    mod <- feols(
+      stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + schooling + I(schooling^2) + civilstatus + region*urb | period")),
+      data,
+      # weights = data$expr,
+      vcov = "cluster"
+    )
+  }
+  
+  return(mod)
+}
+
+#' @export
+run_cs <- function(data, outcome, xfm = NULL, est_method = "ipw") {
+  if (is.null(xfm)) {
+    mod <- did::att_gt(
+      yname = outcome, 
+      tname = "year", 
+      gname = "gname", 
+      data = data,
+      panel = FALSE, 
+      # weightsname = "expr", 
+      base_period = "universal", 
+      est_method = est_method
+    )
+  } else {
+    mod <- did::att_gt(
+      yname = outcome, 
+      tname = "year", 
+      xformla = stats::as.formula(xfm),
+      gname = "gname", 
+      data = data,
+      panel = FALSE, 
+      # weightsname = "expr", 
+      base_period = "universal", 
+      est_method = est_method
+    )
+  }
+  
+  return(mod)
+}
+
+#' @export
+plot_mean <- function(data, outcome) {
+  data <- data |> 
+    dplyr::summarize(
+      mean = mean(!!rlang::sym(outcome), na.rm = TRUE),
+      .by = c(eligible, period)
+    ) |> 
+    dplyr::mutate(eligible = as.factor(eligible), period= as.numeric(as.character(period)))
+  
+  g <- ggplot2::ggplot(data, ggplot2::aes(x = period, y = mean, group = eligible, colour = eligible)) +
+    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", colour = 1) +
+    ggplot2::geom_point() +
+    ggplot2::geom_line() + 
+    ggplot2::labs(x = "Period", y = "Mean Outcome", title = paste0(outcome, " (Mean)")) + 
+    ggplot2::theme_bw()
+  
+  return(g)
+}
+
+
+#' @export
+run_all_regressions <- function(outcome, data) {
+  
+  # Define the formulas
+  simple_formula <- stats::as.formula(paste0(outcome, " ~ eligible*post"))
+  multiple_formula <- stats::as.formula(paste0(outcome, " ~ eligible*post + schooling + I(schooling^2) + civilstatus + region*urb"))
+  
+  # Run the regressions
+  simple_reg <- stats::lm(simple_formula, data, 
+                          # weights = data$expr
+                          )
+  multiple_reg <- stats::lm(multiple_formula, data, 
+                            # weights = data$expr
+                            )
+  
+  print("DONE - OLS")
+  
+  # Double robust DID estimation
+  sz <- DRDID::drdid(
+    yname = outcome,
+    tname = "post",
+    idname = "id",
+    dname = "eligible",
+    xformla = ~ schooling + civilstatus + urb,
+    data = data,
+    panel = FALSE,
+    estMethod = "imp",
+    # weightsname = "expr"
+  )
+  
+  print("DONE - Doubly robust DID")
+  
+  # Inverse probability weighted DID estimation
+  ipw <- DRDID::ipwdid(
+    yname = outcome,
+    tname = "post",
+    idname = "id",
+    dname = "eligible",
+    xformla = ~ schooling + I(schooling^2) + civilstatus + region*urb,
+    data = data,
+    panel = FALSE,
+    boot = TRUE,
+    nboot = 199,
+    # weightsname = "expr"
+  )
+  
+  print("DONE - IPW DID")
+  
+  # Tidy the results for OLS models and filter for the relevant term
+  simple_reg_tidy <- broom::tidy(simple_reg) |> 
+    dplyr::filter(term == "eligible:post") |> 
+    dplyr::mutate(term = "Pooled OLS")
+  multiple_reg_tidy <- broom::tidy(multiple_reg) |> 
+    dplyr::filter(term == "eligible:post") |> 
+    dplyr::mutate(term = "Pooled OLS with Controls")
+  
+  # Manually create tidy results for DRDID
+  sz_tidy <- data.frame(
+    term = c("DR DID"),
+    estimate = sz$ATT,
+    std.error = sz$se,
+    statistic = sz$ATT / sz$se,
+    p.value = ifelse(stats::pt(abs(sz$ATT / sz$se), nrow(data)) * 2  > 1, 
+                     2 - stats::pt(abs(sz$ATT / sz$se), nrow(data)) * 2, 
+                     stats::pt(abs(sz$ATT / sz$se), nrow(data)) * 2)
+  )
+  
+  # Manually create tidy results for IPW DID
+  ipw_tidy <- data.frame(
+    term = c("IPW DID"),
+    estimate = ipw$ATT,
+    std.error = ipw$se,
+    statistic = ipw$ATT / ipw$se,
+    p.value = ifelse(stats::pt(abs(ipw$ATT / ipw$se), nrow(data)) * 2  > 1, 
+                     2 - stats::pt(abs(ipw$ATT / ipw$se), nrow(data)) * 2, 
+                     stats::pt(abs(ipw$ATT / ipw$se), nrow(data)) * 2)
+  )
+  
+  # Combine the results
+  combined_results <- dplyr::bind_rows(simple_reg_tidy, multiple_reg_tidy, sz_tidy, ipw_tidy)
+  
+  return(combined_results)
+}
+
+# #' @export
+# sensitivity_check <- function(m1, relativeMagnitudes = TRUE) {
+#   betahat <- m1[["coefficients"]][-1:-8] # save the coefficients
+#   sigma <- summary(m1)[["cov.unscaled"]][-1:-8, -1:-8] # save the covariance matrix
+#   
+#   originalResults <- constructOriginalCS(
+#     betahat = betahat,
+#     sigma = sigma,
+#     numPrePeriods = 3,
+#     numPostPeriods = 3
+#   )
+#   
+#   if (relativeMagnitudes == TRUE) {
+#     delta_rm_results <-
+#       createSensitivityResults_relativeMagnitudes(
+#         betahat = betahat, # coefficients
+#         sigma = sigma, # covariance matrix
+#         numPrePeriods = 3, # number of pre-treatment coefficients
+#         numPostPeriods = 3, # number of post-treatment coefficients
+#         Mbarvec = seq(0.5, 2, by = 0.5) # values of Mbar
+#       )
+#     
+#     g <- createSensitivityPlot_relativeMagnitudes(delta_rm_results, originalResults)
+#     
+#   } else {
+#     delta_sd_results <- createSensitivityResults(
+#       betahat = betahat,
+#       sigma = sigma,
+#       numPrePeriods = 3,
+#       numPostPeriods = 3,
+#       Mvec = seq(from = 0, to = 0.05, by = 0.01)
+#     )
+#     
+#     g <- createSensitivityPlot(delta_sd_results, originalResults)
+#   }
+#   
+#   return(g)
+# }
