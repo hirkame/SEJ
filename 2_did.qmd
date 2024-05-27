@@ -16,6 +16,23 @@ df_intensive <- readRDS("data/df_intensive.rds")
 df_extensive <- readRDS("data/df_extensive.rds")
 ```
 
+# Updates 
+
+Data / Sample
+- Sample: the male aged between 18 to 30 at least with 12 years education. Employing the conservative sampling. 
+- Treatment: aged between 18 - 25
+- Control: aged between 26 - 30 without subsidies 
+
+Empirical Strategy (DID)
+- Pooled OLS (Dynamic): Pre-trend issue. Appear to be no dynamic TEs? 
+- DR DID & IPW DID (Homogeneous)
+- Callaway Sant'Anna (Dynamic, but not staggered in our context): Conditional parallel trend with DR estimator
+
+Discussion 
+- What empirical approach is more plausible in our context? 
+- Is there any potential extentions in the empirical strategy? 
+
+
 # Intensive Margin
 
 ## Job income (log)
@@ -48,19 +65,19 @@ te_log_jobincome
 ```
 
 ```{r}
-cs_jobincome <- functions$run_cs(
-  data = df_intensive,
-  outcome = "log_jobincome",
-  xfm = "~ schooling + civilstatus + urb",
-  est_method = "dr"
-)
-
-summary(cs_jobincome)
-
-aggte(cs_jobincome, type = "dynamic") |>
-  ggdid()  +
-  ggtitle("Log of job income (Callaway and Sant'Anna, 2021)") +
-  theme_bw()
+# cs_jobincome <- functions$run_cs(
+#   data = df_intensive,
+#   outcome = "log_jobincome",
+#   xfm = "~ schooling + civilstatus + urb",
+#   est_method = "dr"
+# )
+# 
+# summary(cs_jobincome)
+# 
+# aggte(cs_jobincome, type = "dynamic") |>
+#   ggdid()  +
+#   ggtitle("Log of job income (Callaway and Sant'Anna, 2021)") +
+#   theme_bw()
 ```
 
 ## Total Income
@@ -127,21 +144,21 @@ te_log_hours
 ```
 
 ```{r}
-cs_workinghours <- functions$run_cs(
-  df_intensive |>
-    filter(hours > 0 & hours <= 80),
-  "log_hours",
-  xfm = "~ schooling + civilstatus + urb",
-  est_method = "dr"
-)
-
-summary(cs_workinghours)
-# aggte(cs_workinghours, type = "simple")
-
-aggte(cs_workinghours, type = "dynamic") |>
-  ggdid()  +
-  ggtitle("Log of working hours (Callaway and Sant'Anna, 2021)") +
-  theme_bw()
+# cs_workinghours <- functions$run_cs(
+#   df_intensive |>
+#     filter(hours > 0 & hours <= 80),
+#   "log_hours",
+#   xfm = "~ schooling + civilstatus + urb",
+#   est_method = "dr"
+# )
+# 
+# summary(cs_workinghours)
+# # aggte(cs_workinghours, type = "simple")
+# 
+# aggte(cs_workinghours, type = "dynamic") |>
+#   ggdid()  +
+#   ggtitle("Log of working hours (Callaway and Sant'Anna, 2021)") +
+#   theme_bw()
 ```
 
 # Extensive Margin
@@ -174,20 +191,20 @@ te_lfp
 ```
 
 ```{r}
-cs_lfp <- functions$run_cs(
-  df_extensive,
-  "lfp",
-  xfm = "~ schooling + civilstatus + urb",
-  est_method = "dr"
-)
-
-summary(cs_lfp)
-# aggte(cs_lfp, type = "simple")
-
-aggte(cs_lfp, type = "dynamic") |>
-  ggdid()  +
-  ggtitle("LFP (Callaway and Sant'Anna, 2021)") +
-  theme_bw()
+# cs_lfp <- functions$run_cs(
+#   df_extensive,
+#   "lfp",
+#   xfm = "~ schooling + civilstatus + urb",
+#   est_method = "dr"
+# )
+# 
+# summary(cs_lfp)
+# # aggte(cs_lfp, type = "simple")
+# 
+# aggte(cs_lfp, type = "dynamic") |>
+#   ggdid()  +
+#   ggtitle("LFP (Callaway and Sant'Anna, 2021)") +
+#   theme_bw()
 ```
 
 ## Employment
@@ -218,21 +235,21 @@ te_employment
 ```
 
 ```{r}
-cs_employment <- functions$run_cs(
-  df_extensive,
-  "employment",
-  xfm = "~ schooling + civilstatus + urb",
-  est_method = "dr"
-)
-
-summary(cs_employment)
-
-# aggte(cs_employment, type = "simple")
-
-aggte(cs_employment, type = "dynamic") |>
-  ggdid()  +
-  ggtitle("Employment (Callaway and Sant'Anna, 2021)") +
-  theme_bw()
+# cs_employment <- functions$run_cs(
+#   df_extensive,
+#   "employment",
+#   xfm = "~ schooling + civilstatus + urb",
+#   est_method = "dr"
+# )
+# 
+# summary(cs_employment)
+# 
+# # aggte(cs_employment, type = "simple")
+# 
+# aggte(cs_employment, type = "dynamic") |>
+#   ggdid()  +
+#   ggtitle("Employment (Callaway and Sant'Anna, 2021)") +
+#   theme_bw()
 ```
 
 ## Unemployment
@@ -259,21 +276,21 @@ te_unemployment
 ```
 
 ```{r}
-cs_unemployment <- functions$run_cs(
-  df_extensive,
-  "unemployment",
-  xfm = "~ schooling + civilstatus + urb",
-  est_method = "dr"
-)
-
-summary(cs_unemployment)
-
-# aggte(cs_unemployment, type = "simple")
-
-aggte(cs_unemployment, type = "dynamic") |>
-  ggdid()  +
-  ggtitle("Unemployment (Callaway and Sant'Anna, 2021)") +
-  theme_bw()
+# cs_unemployment <- functions$run_cs(
+#   df_extensive,
+#   "unemployment",
+#   xfm = "~ schooling + civilstatus + urb",
+#   est_method = "dr"
+# )
+# 
+# summary(cs_unemployment)
+# 
+# # aggte(cs_unemployment, type = "simple")
+# 
+# aggte(cs_unemployment, type = "dynamic") |>
+#   ggdid()  +
+#   ggtitle("Unemployment (Callaway and Sant'Anna, 2021)") +
+#   theme_bw()
 ```
 
 ## Contract
@@ -304,19 +321,19 @@ te_contract
 ```
 
 ```{r}
-cs_contract <- functions$run_cs(
-  df_extensive,
-  "contract",
-  xfm = "~ schooling + civilstatus + urb",
-  est_method = "dr"
-)
-
-summary(cs_contract)
-
-# aggte(cs_contract, type = "simple")
-
-aggte(cs_contract, type = "dynamic") |>
-  ggdid()  +
-  ggtitle("Contract (Callaway and Sant'Anna, 2021)") +
-  theme_bw()
+# cs_contract <- functions$run_cs(
+#   df_extensive,
+#   "contract",
+#   xfm = "~ schooling + civilstatus + urb",
+#   est_method = "dr"
+# )
+# 
+# summary(cs_contract)
+# 
+# # aggte(cs_contract, type = "simple")
+# 
+# aggte(cs_contract, type = "dynamic") |>
+#   ggdid()  +
+#   ggtitle("Contract (Callaway and Sant'Anna, 2021)") +
+#   theme_bw()
 ```

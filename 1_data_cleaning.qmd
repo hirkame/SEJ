@@ -74,7 +74,7 @@ df_casen <- df_casen |>
     ), 
     post = if_else(year > 2009, 1, 0),
     lineartrend = year - 2009, 
-    period = as.factor(year - 2009) |> relevel(ref = "0"),
+    period = as.factor(year - 2009) |> relevel(ref = "-3"),
     gname = if_else(eligible == 1, 2010, 0), 
   ) 
 ```

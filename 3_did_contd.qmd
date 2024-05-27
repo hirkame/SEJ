@@ -1,0 +1,134 @@
+```{r echo = FALSE, include=FALSE}
+library(tidyverse)
+
+here::i_am("2_did.qmd")
+options(box.path = here::here())
+box::use(./functions)
+box::reload(functions)
+
+df_intensive <- readRDS("data/df_intensive.rds")
+df_extensive <- readRDS("data/df_extensive.rds")
+```
+
+# Additional sample restriction
+
+```{r}
+df_intensive <- df_intensive |> 
+  filter(decil <= 8)
+
+df_extensive <- df_extensive |> 
+  filter(decil <= 8)
+```
+
+# Intensive Margin
+
+## Job income (log)
+
+```{r}
+functions$plot_mean(df_intensive, "log_jobincome")
+```
+
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_intensive, "log_jobincome", F, F), 
+  functions$run_ols(df_intensive, "log_jobincome", T, F)
+)
+```
+
+
+
+## Total Income
+
+```{r}
+functions$plot_mean(df_intensive, "log_totalincome")
+```
+
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_intensive, "log_totalincome", F, F), 
+  functions$run_ols(df_intensive, "log_totalincome", T, F)
+)
+```
+
+
+
+
+## Working hours
+
+```{r}
+functions$plot_mean(df_intensive |>
+                      filter(hours > 0 & hours <= 80), "log_hours")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", F, F),
+  functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", T, F)
+)
+```
+
+
+
+# Extensive Margin
+
+## Labor force participation
+
+```{r}
+functions$plot_mean(df_extensive, "lfp")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_extensive, "lfp", F, F),
+  functions$run_ols(df_extensive, "lfp", T, F)
+)
+```
+
+
+
+## Employment
+
+```{r}
+functions$plot_mean(df_extensive, "employment")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_extensive, "employment", F, F),
+  functions$run_ols(df_extensive, "employment", T, F)
+)
+```
+
+
+
+## Unemployment
+
+```{r}
+functions$plot_mean(df_extensive, "unemployment")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_extensive, "unemployment", F, F),
+  functions$run_ols(df_extensive, "unemployment", T, F)
+)
+```
+
+
+
+## Contract
+
+```{r}
+functions$plot_mean(df_extensive, "contract")
+```
+
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(df_extensive, "contract", F, F), 
+  functions$run_ols(df_extensive, "contract", T, F)
+)
+```
+

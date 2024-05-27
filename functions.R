@@ -5,9 +5,9 @@ run_ols <- function(data, outcome, control = FALSE, linear_pretrend = FALSE) {
   } else if (control == FALSE & linear_pretrend == TRUE) {
     fml <- stats::as.formula(paste0(outcome, "~ eligible*period + eligible:lineartrend"))
   } else if (control == TRUE & linear_pretrend == FALSE) {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + schooling + I(schooling^2) + civilstatus + region*urb"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region*urb"))
   } else {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + eligible:lineartrend + schooling + I(schooling^2) + civilstatus + region*urb"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + eligible:lineartrend + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region*urb"))
   }
   
   mod <- stats::lm(
@@ -35,7 +35,7 @@ prep_event_study_plot <- function(model) {
   ) |>
     dplyr::filter(stringr::str_detect(period, "eligible:period")) |> 
     dplyr::mutate(period = stringr::str_replace(period, "eligible:period", "") |> as.numeric()) |> 
-    dplyr::add_row(period = 0, estimate = 0, conf_low = 0, conf_high = 0)
+    dplyr::add_row(period = -3, estimate = 0, conf_low = 0, conf_high = 0)
   
   return(df_model)
 }
@@ -51,7 +51,7 @@ plot_event_study <- function(mod1, mod2) {
   
   g <- ggplot2::ggplot(event_study_plot, ggplot2::aes(x = period, y = estimate, ymin = conf_low, ymax = conf_high)) +
     ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
-    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", colour = "gray") +
+    ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = "gray") +
     ggplot2::geom_errorbar(width = 0.4) +
     ggplot2::geom_point() +
     ggplot2::facet_wrap(. ~ model) +
@@ -61,26 +61,26 @@ plot_event_study <- function(mod1, mod2) {
   return(g)
 }
 
-#' @export
-run_feols <- function(data, outcome, control = TRUE) {
-  if (control == FALSE) {
-    mod <- feols(
-      stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + eligible:lineartrend | period")), 
-      data, 
-      # weights = data$expr,
-      "iid"
-    )
-  } else {
-    mod <- feols(
-      stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + schooling + I(schooling^2) + civilstatus + region*urb | period")),
-      data,
-      # weights = data$expr,
-      vcov = "cluster"
-    )
-  }
-  
-  return(mod)
-}
+#' #' @export
+#' run_feols <- function(data, outcome, control = TRUE) {
+#'   if (control == FALSE) {
+#'     mod <- feols(
+#'       stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + eligible:lineartrend | period")), 
+#'       data, 
+#'       # weights = data$expr,
+#'       "iid"
+#'     )
+#'   } else {
+#'     mod <- feols(
+#'       stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + schooling + I(schooling^2) + civilstatus + region*urb | period")),
+#'       data,
+#'       # weights = data$expr,
+#'       vcov = "cluster"
+#'     )
+#'   }
+#'   
+#'   return(mod)
+#' }
 
 #' @export
 run_cs <- function(data, outcome, xfm = NULL, est_method = "ipw") {
@@ -122,7 +122,7 @@ plot_mean <- function(data, outcome) {
     dplyr::mutate(eligible = as.factor(eligible), period= as.numeric(as.character(period)))
   
   g <- ggplot2::ggplot(data, ggplot2::aes(x = period, y = mean, group = eligible, colour = eligible)) +
-    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", colour = 1) +
+    ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = 1) +
     ggplot2::geom_point() +
     ggplot2::geom_line() + 
     ggplot2::labs(x = "Period", y = "Mean Outcome", title = paste0(outcome, " (Mean)")) + 
@@ -137,7 +137,7 @@ run_all_regressions <- function(outcome, data) {
   
   # Define the formulas
   simple_formula <- stats::as.formula(paste0(outcome, " ~ eligible*post"))
-  multiple_formula <- stats::as.formula(paste0(outcome, " ~ eligible*post + schooling + I(schooling^2) + civilstatus + region*urb"))
+  multiple_formula <- stats::as.formula(paste0(outcome, " ~ eligible*post + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region*urb"))
   
   # Run the regressions
   simple_reg <- stats::lm(simple_formula, data, 
@@ -170,7 +170,7 @@ run_all_regressions <- function(outcome, data) {
     tname = "post",
     idname = "id",
     dname = "eligible",
-    xformla = ~ schooling + I(schooling^2) + civilstatus + region*urb,
+    xformla = ~ experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region*urb,
     data = data,
     panel = FALSE,
     boot = TRUE,
