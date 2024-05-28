@@ -86,7 +86,7 @@ df_casen <- df_casen |>
 df_casen <- df_casen |> 
   filter(eligible == 1 | non_eligible == 1) |> 
   filter(student != "1" & gender == "1") |> 
-  # filter(year >= 2000) |> 
+  filter(year >= 2000) |>
   filter(!is.na(decil))
 
 # table(df_casen$treatment)
