@@ -13,7 +13,7 @@ run_ols <- function(data, outcome, control = FALSE, linear_pretrend = FALSE) {
   mod <- stats::lm(
     fml, 
     data = data, 
-    weights = expr
+    weights = 1/expr
   )
   
   mod <- lmtest::coeftest(mod, vcov = sandwich::vcovCL, cluster = data$cohort)

@@ -1,7 +1,7 @@
 ```{r echo = FALSE, include=FALSE}
 library(tidyverse)
 
-here::i_am("2_did.qmd")
+here::i_am("3_did_contd.qmd")
 options(box.path = here::here())
 box::use(./functions)
 box::reload(functions)
@@ -14,12 +14,12 @@ df_extensive <- readRDS("data/df_extensive.rds")
 
 ```{r}
 df_intensive <- df_intensive |> 
-  filter(decil <= 8)
-  filter(age > 22, age < 29)
+  filter(decil <= 8) |> 
+  filter(age %in% 23:28)
 
 df_extensive <- df_extensive |> 
-  filter(decil <= 8)
-  filter(age > 22, age < 29)
+  filter(decil <= 8) |> 
+  filter(age %in% 23:28)
 
 ```
 
