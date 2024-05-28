@@ -9,7 +9,7 @@ library(haven)
 -   Drop 1 observation
 
 ```{r}
-raw_data <- read_dta("data/CASEN_allyears_v4.dta")
+raw_data <- read_dta("data/CASEN_allyears_v5.dta")
 
 test <- raw_data |> filter(subsidio_joven == 1)
 table(test$decil)
@@ -20,7 +20,7 @@ table(test$year)
 ```{r}
 df_casen <- as.data.frame(raw_data)
 df_casen <- df_casen |> 
-  select(-c(municipality, id, subsidio_joven_req, subsidio_joven_req_income)) |> 
+  select(-c(municipality, id)) |> 
   # drop 1 obs. 
   filter(
     if_any(
