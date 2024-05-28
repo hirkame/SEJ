@@ -15,9 +15,12 @@ df_extensive <- readRDS("data/df_extensive.rds")
 ```{r}
 df_intensive <- df_intensive |> 
   filter(decil <= 8)
+  filter(age > 22, age < 29)
 
 df_extensive <- df_extensive |> 
   filter(decil <= 8)
+  filter(age > 22, age < 29)
+
 ```
 
 # Intensive Margin
