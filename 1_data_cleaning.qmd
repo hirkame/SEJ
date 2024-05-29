@@ -10,47 +10,10 @@ library(survey)
 -   Drop 1 observation
 
 ```{r}
-raw_data <- read_dta("data/CASEN_allyears_v5.dta")
-```
+raw_data <- read_dta("data/CASEN_allyears_v7.dta")
 
-```{r}
 df_casen <- as.data.frame(raw_data)
-df_casen <- df_casen |> 
-  mutate(
-    region = case_when(
-      region == 14 ~ 10,
-      region == 15 ~ 1, 
-      region == 16 ~ 8,
-      TRUE ~ region
-    )
-  ) |> 
-  mutate(
-    civilstatus = case_when(
-      year == 2017 & civilstatus %in% 2:3 ~ 2, 
-      year == 2017 & civilstatus %in% 4:6 ~ 3,
-      year == 2017 & civilstatus == 7 ~ 4,
-      year == 2017 & civilstatus == 8 ~ 5,
-      TRUE ~ civilstatus
-    )
-  )
-```
 
-```{r}
-test <- df_casen |> filter(subsidio_joven == 1)
-test_design <- svydesign(
-  id = ~id, 
-  strata = ~region, 
-  weights = ~expr, 
-  data = test, 
-  nest = TRUE, 
-)
-svytable(~decil, design = test_design)
-svytable(~age, design = test_design)
-svytable(~year, design = test_design)
-```
-
-
-```{r}
 df_casen <- df_casen |> 
   select(-c(municipality, id)) |> 
   # drop 1 obs. 
@@ -69,7 +32,7 @@ df_casen <- df_casen |>
     ),
     across(
       .fns = ~ as.factor(.x), 
-      .cols = c(region, urb, gender, student, civilstatus)
+      .cols = c(region, urb, gender, student, civilstatus, educ)
     ),
     # New level of factor
     # across(
@@ -85,6 +48,22 @@ df_casen <- df_casen |>
     cohort = year - age
   )
 ```
+
+```{r}
+
+test <- df_casen |> filter(subsidio_joven == 1)
+test_design <- svydesign(
+  id = ~id, 
+  strata = ~region, 
+  weights = ~expr, 
+  data = test, 
+  nest = TRUE, 
+)
+svytable(~decil, design = test_design)
+svytable(~age, design = test_design)
+svytable(~year, design = test_design)
+```
+
 
 ## DID variables
 
