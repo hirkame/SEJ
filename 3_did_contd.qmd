@@ -22,6 +22,25 @@ df_extensive <- df_extensive |>
   filter(age %in% 23:28)
 
 ```
+```{r}
+intensive_design <- svydesign(
+  id = ~id, 
+  strata = ~region, 
+  weights = ~expr, 
+  data = df_intensive, 
+  nest = TRUE, 
+)
+
+extensive_design <- svydesign(
+  id = ~id, 
+  strata = ~region, 
+  weights = ~expr, 
+  data = df_extensive, 
+  nest = TRUE,
+)
+
+
+```
 
 # Intensive Margin
 
