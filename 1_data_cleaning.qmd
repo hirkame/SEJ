@@ -12,9 +12,16 @@ library(haven)
 raw_data <- read_dta("data/CASEN_allyears_v5.dta")
 
 test <- raw_data |> filter(subsidio_joven == 1)
-table(test$decil)
-table(test$age)
-table(test$year)
+test_design <- svydesign(
+  id = ~id, 
+  strata = ~region, 
+  weights = ~expr, 
+  data = test, 
+  nest = TRUE, 
+)
+svytable(~decil, design = test_design)
+svytable(~age, design = test_design)
+svytable(~year, design = test_design)
 ```
 
 ```{r}
@@ -108,7 +115,11 @@ df_intensive <- df_casen |>
       .fns = log,
       .names = "log_{.col}"
     )
-  ) 
+  ) %>%
+  filter(hours > 0) %>%
+  filter(hours < 80) %>%
+  filter(!is.na(log_hours))
+
 saveRDS(df_intensive, "data/df_intensive.rds")
 
 
