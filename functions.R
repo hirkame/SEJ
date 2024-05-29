@@ -10,11 +10,7 @@ run_ols <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
     fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region*urb"))
   }
   
-  mod <- stats::lm(
-    fml, 
-    data = data, 
-    weights = 1/sqrt(expr)
-  )
+  mod <- svyglm(fml, design = intensive_design)
   
   mod <- lmtest::coeftest(mod, vcov = sandwich::vcovCL, cluster = data$cohort)
   
