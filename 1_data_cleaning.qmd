@@ -50,18 +50,19 @@ df_casen <- df_casen |>
 ```
 
 ```{r}
-
 test <- df_casen |> filter(subsidio_joven == 1)
 test_design <- svydesign(
-  id = ~id, 
-  strata = ~region, 
+  id = ~varunit, 
+  strata = ~varstrat, 
   weights = ~expr, 
   data = test, 
   nest = TRUE, 
 )
+
 svytable(~decil, design = test_design)
 svytable(~age, design = test_design)
 svytable(~year, design = test_design)
+svytable(~educ, design = test_design)
 ```
 
 
