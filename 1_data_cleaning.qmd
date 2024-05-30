@@ -10,7 +10,7 @@ library(survey)
 -   Drop 1 observation
 
 ```{r}
-raw_data <- read_dta("data/CASEN_allyears_v7.dta")
+raw_data <- read_dta("data/CASEN_allyears_v9.dta")
 
 df_casen <- as.data.frame(raw_data)
 
