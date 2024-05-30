@@ -22,13 +22,16 @@ df_extensive <- df_extensive |>
   filter(age %in% 23:28)
 
 ```
+
 ```{r}
+options(survey.lonely.psu="adjust")
+
 intensive_design <- svydesign(
   id = ~varunit, 
   strata = ~varstrat, 
   weights = ~expr, 
   data = df_intensive, 
-  nest = TRUE, 
+  nest = TRUE
 )
 
 extensive_design <- svydesign(
