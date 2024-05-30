@@ -1,13 +1,9 @@
 ```{r echo = FALSE, include=FALSE}
 library(tidyverse)
+library(survey)
 library(haven)
-library(estimatr)
-library(fixest)
-library(did)
-library(DRDID)
-library(HonestDiD)
 
-here::i_am("2_did.qmd")
+here::i_am("3_did_contd.qmd")
 options(box.path = here::here())
 box::use(./functions)
 box::reload(functions)
@@ -16,22 +12,25 @@ df_intensive <- readRDS("data/df_intensive.rds")
 df_extensive <- readRDS("data/df_extensive.rds")
 ```
 
-# Updates 
+```{r}
+options(survey.lonely.psu="adjust")
 
-Data / Sample
-- Sample: the male aged between 18 to 30 at least with 12 years education. Employing the conservative sampling. 
-- Treatment: aged between 18 - 25
-- Control: aged between 26 - 30 without subsidies 
+intensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_intensive, 
+  nest = TRUE
+)
 
-Empirical Strategy (DID)
-- Pooled OLS (Dynamic): Pre-trend issue. Appear to be no dynamic TEs? 
-- DR DID & IPW DID (Homogeneous)
-- Callaway Sant'Anna (Dynamic, but not staggered in our context): Conditional parallel trend with DR estimator
-
-Discussion 
-- What empirical approach is more plausible in our context? 
-- Is there any potential extentions in the empirical strategy? 
-
+extensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_extensive, 
+  nest = TRUE
+)
+```
 
 # Intensive Margin
 
@@ -41,44 +40,25 @@ Discussion
 functions$plot_mean(df_intensive, "log_jobincome")
 ```
 
+
 ```{r}
-# run_feols(df_intensive, "log_jobincome", F) |>
-#   iplot()
-# run_feols(df_intensive, "log_jobincome", T) |>
-#   iplot()
-
-m1 <- functions$run_ols(df_intensive, "log_jobincome", F, F)
-m2 <- functions$run_ols(df_intensive, "log_jobincome", T, F)
-functions$plot_event_study(m1, m2)
-
-# modelsummary::modelsummary(list(m1, m2), vcov = "HC", coef_omit = "^(?!eligible:period)", gof_omit = "BIC|AIC")
+functions$plot_event_study(
+  functions$run_ols(intensive_design, "log_jobincome", F, F), 
+  functions$run_ols(intensive_design, "log_jobincome", T, F)
+)
 ```
 
 ```{r}
-# sensitivity_check(m1, relativeMagnitudes = T)
-# sensitivity_check(m1, relativeMagnitudes = F)
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_jobincome", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_jobincome", T, T)
+)
 ```
 
-```{r}
-te_log_jobincome <- functions$run_all_regressions("log_jobincome", df_intensive)
-te_log_jobincome
-```
 
-```{r}
-# cs_jobincome <- functions$run_cs(
-#   data = df_intensive,
-#   outcome = "log_jobincome",
-#   xfm = "~ schooling + civilstatus + urb",
-#   est_method = "dr"
-# )
-# 
-# summary(cs_jobincome)
-# 
-# aggte(cs_jobincome, type = "dynamic") |>
-#   ggdid()  +
-#   ggtitle("Log of job income (Callaway and Sant'Anna, 2021)") +
-#   theme_bw()
-```
 
 ## Total Income
 
@@ -86,80 +66,50 @@ te_log_jobincome
 functions$plot_mean(df_intensive, "log_totalincome")
 ```
 
+
 ```{r}
-m1 <- functions$run_ols(df_intensive, "log_totalincome", F, F)
-m2 <- functions$run_ols(df_intensive, "log_totalincome", T, F)
-functions$plot_event_study(m1, m2)
+functions$plot_event_study(
+  functions$run_ols(intensive_design, "log_totalincome", F, F), 
+  functions$run_ols(intensive_design, "log_totalincome", T, F)
+)
 ```
 
 ```{r}
-# sensitivity_check(m1, relativeMagnitudes = T)
-# sensitivity_check(m1, relativeMagnitudes = F)
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_totalincome", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_totalincome", T, T)
+)
 ```
 
-```{r}
-te_log_totalincome <- functions$run_all_regressions("log_totalincome", df_intensive)
-te_log_totalincome
-```
+
 
 ## Working hours
 
--   Restrict the sample by those with positive, but less than 80 working hours
-
 ```{r}
-functions$plot_mean(df_intensive |>
-                      filter(hours > 0 & hours <= 80), "log_hours")
+functions$plot_mean(df_intensive, "log_hours")
 ```
 
 ```{r}
-# FE-OLS
-# run_feols(
-#   df_intensive |>
-#     filter(hours > 0 & hours <= 80),
-#   "log(hours)", F) |>
-#   iplot()
-# run_feols(
-#   df_intensive |>
-#     filter(hours > 0 & hours <= 80),
-#   "log(hours)", T) |>
-#   iplot()
-
-# OLS
-m1 <- functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", F)
-m2 <- functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", T)
-functions$plot_event_study(m1, m2)
-```
-
-```{r}
-# sensitivity_check(m1, relativeMagnitudes = T)
-# sensitivity_check(m1, relativeMagnitudes = F)
-```
-
-```{r}
-te_log_hours <- functions$run_all_regressions(
-  "log_hours", 
-  df_intensive |> filter(hours > 0 & hours <= 80)
+functions$plot_event_study(
+  functions$run_ols(intensive_design, "log_hours", F, F),
+  functions$run_ols(intensive_design, "log_hours", T, F)
 )
-te_log_hours
 ```
 
 ```{r}
-# cs_workinghours <- functions$run_cs(
-#   df_intensive |>
-#     filter(hours > 0 & hours <= 80),
-#   "log_hours",
-#   xfm = "~ schooling + civilstatus + urb",
-#   est_method = "dr"
-# )
-# 
-# summary(cs_workinghours)
-# # aggte(cs_workinghours, type = "simple")
-# 
-# aggte(cs_workinghours, type = "dynamic") |>
-#   ggdid()  +
-#   ggtitle("Log of working hours (Callaway and Sant'Anna, 2021)") +
-#   theme_bw()
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_hours", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_hours", T, T)
+)
 ```
+
+
 
 # Extensive Margin
 
@@ -170,42 +120,23 @@ functions$plot_mean(df_extensive, "lfp")
 ```
 
 ```{r}
-# run_feols(df_extensive, "lfp", F) |> 
-#   iplot()
-# run_feols(df_extensive, "lfp", T) |> 
-#   iplot()
-
-m1 <- functions$run_ols(df_extensive, "lfp", F)
-m2 <- functions$run_ols(df_extensive, "lfp", T)
-functions$plot_event_study(m1, m2)
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "lfp", F, F),
+  functions$run_ols(extensive_design, "lfp", T, F)
+)
 ```
 
 ```{r}
-# sensitivity_check(m1, relativeMagnitudes = T) |> print()
-# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "lfp", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "lfp", T, T)
+)
 ```
 
-```{r}
-te_lfp <- functions$run_all_regressions("lfp", df_extensive)
-te_lfp
-```
 
-```{r}
-# cs_lfp <- functions$run_cs(
-#   df_extensive,
-#   "lfp",
-#   xfm = "~ schooling + civilstatus + urb",
-#   est_method = "dr"
-# )
-# 
-# summary(cs_lfp)
-# # aggte(cs_lfp, type = "simple")
-# 
-# aggte(cs_lfp, type = "dynamic") |>
-#   ggdid()  +
-#   ggtitle("LFP (Callaway and Sant'Anna, 2021)") +
-#   theme_bw()
-```
 
 ## Employment
 
@@ -214,84 +145,48 @@ functions$plot_mean(df_extensive, "employment")
 ```
 
 ```{r}
-# run_feols(df_extensive, "employment", F) |> 
-#   iplot()
-# run_feols(df_extensive, "employment", T) |> 
-#   iplot()
-
-m1 <- functions$run_ols(df_extensive, "employment", F)
-m2 <- functions$run_ols(df_extensive, "employment", T)
-functions$plot_event_study(m1, m2)
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "employment", F, F),
+  functions$run_ols(extensive_design, "employment", T, F)
+)
 ```
 
 ```{r}
-# sensitivity_check(m1, relativeMagnitudes = T) |> print()
-# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "employment", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "employment", T, T)
+)
 ```
 
-```{r}
-te_employment <- functions$run_all_regressions("employment", df_extensive)
-te_employment
-```
 
-```{r}
-# cs_employment <- functions$run_cs(
-#   df_extensive,
-#   "employment",
-#   xfm = "~ schooling + civilstatus + urb",
-#   est_method = "dr"
-# )
-# 
-# summary(cs_employment)
-# 
-# # aggte(cs_employment, type = "simple")
-# 
-# aggte(cs_employment, type = "dynamic") |>
-#   ggdid()  +
-#   ggtitle("Employment (Callaway and Sant'Anna, 2021)") +
-#   theme_bw()
-```
 
 ## Unemployment
 
 ```{r}
-# run_feols(df_extensive, "unemployment", F) |> 
-#   iplot()
-# run_feols(df_extensive, "unemployment", T) |> 
-#   iplot()
-
-m1 <- functions$run_ols(df_extensive, "unemployment", F)
-m2 <- functions$run_ols(df_extensive, "unemployment", T)
-functions$plot_event_study(m1, m2)
+functions$plot_mean(df_extensive, "unemployment")
 ```
 
 ```{r}
-# sensitivity_check(m1, relativeMagnitudes = T) |> print()
-# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "unemployment", F, F),
+  functions$run_ols(extensive_design, "unemployment", T, F)
+)
 ```
 
 ```{r}
-te_unemployment <- functions$run_all_regressions("unemployment", df_extensive)
-te_unemployment
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "unemployment", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "unemployment", T, T)
+)
 ```
 
-```{r}
-# cs_unemployment <- functions$run_cs(
-#   df_extensive,
-#   "unemployment",
-#   xfm = "~ schooling + civilstatus + urb",
-#   est_method = "dr"
-# )
-# 
-# summary(cs_unemployment)
-# 
-# # aggte(cs_unemployment, type = "simple")
-# 
-# aggte(cs_unemployment, type = "dynamic") |>
-#   ggdid()  +
-#   ggtitle("Unemployment (Callaway and Sant'Anna, 2021)") +
-#   theme_bw()
-```
+
 
 ## Contract
 
@@ -299,41 +194,21 @@ te_unemployment
 functions$plot_mean(df_extensive, "contract")
 ```
 
-```{r}
-# run_feols(df_extensive, "contract", F) |> 
-#   iplot()
-# run_feols(df_extensive, "contract", T) |> 
-#   iplot()
 
-m1 <- functions$run_ols(df_extensive, "contract", F)
-m2 <- functions$run_ols(df_extensive, "contract", T)
-functions$plot_event_study(m1, m2)
+```{r}
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "contract", F, F), 
+  functions$run_ols(extensive_design, "contract", T, F)
+)
 ```
 
 ```{r}
-# sensitivity_check(m1, relativeMagnitudes = T) |> print()
-# sensitivity_check(m1, relativeMagnitudes = F) |> print()
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "contract", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "contract", T, T)
+)
 ```
 
-```{r}
-te_contract <- functions$run_all_regressions("contract", df_extensive)
-te_contract
-```
-
-```{r}
-# cs_contract <- functions$run_cs(
-#   df_extensive,
-#   "contract",
-#   xfm = "~ schooling + civilstatus + urb",
-#   est_method = "dr"
-# )
-# 
-# summary(cs_contract)
-# 
-# # aggte(cs_contract, type = "simple")
-# 
-# aggte(cs_contract, type = "dynamic") |>
-#   ggdid()  +
-#   ggtitle("Contract (Callaway and Sant'Anna, 2021)") +
-#   theme_bw()
-```
