@@ -1,5 +1,7 @@
 ```{r echo = FALSE, include=FALSE}
 library(tidyverse)
+library(survey)
+library(haven)
 
 here::i_am("3_did_contd.qmd")
 options(box.path = here::here())
@@ -41,8 +43,6 @@ extensive_design <- svydesign(
   data = df_extensive, 
   nest = TRUE,
 )
-
-
 ```
 
 # Intensive Margin
@@ -58,6 +58,16 @@ functions$plot_mean(df_intensive, "log_jobincome")
 functions$plot_event_study(
   functions$run_ols(intensive_design, "log_jobincome", F, F), 
   functions$run_ols(intensive_design, "log_jobincome", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_jobincome", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_jobincome", T, T)
 )
 ```
 
@@ -77,6 +87,15 @@ functions$plot_event_study(
 )
 ```
 
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_totalincome", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_totalincome", T, T)
+)
+```
 
 
 
@@ -90,6 +109,16 @@ functions$plot_mean(df_intensive, "log_hours")
 functions$plot_event_study(
   functions$run_ols(intensive_design, "log_hours", F, F),
   functions$run_ols(intensive_design, "log_hours", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_hours", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_hours", T, T)
 )
 ```
 
@@ -110,6 +139,16 @@ functions$plot_event_study(
 )
 ```
 
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "lfp", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "lfp", T, T)
+)
+```
+
 
 
 ## Employment
@@ -122,6 +161,16 @@ functions$plot_mean(df_extensive, "employment")
 functions$plot_event_study(
   functions$run_ols(extensive_design, "employment", F, F),
   functions$run_ols(extensive_design, "employment", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "employment", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "employment", T, T)
 )
 ```
 
@@ -140,6 +189,16 @@ functions$plot_event_study(
 )
 ```
 
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "unemployment", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "unemployment", T, T)
+)
+```
+
 
 
 ## Contract
@@ -153,6 +212,16 @@ functions$plot_mean(df_extensive, "contract")
 functions$plot_event_study(
   functions$run_ols(extensive_design, "contract", F, F), 
   functions$run_ols(extensive_design, "contract", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "contract", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "contract", T, T)
 )
 ```
 

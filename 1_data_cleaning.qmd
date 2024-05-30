@@ -96,12 +96,22 @@ df_casen <- df_casen |>
 ```{r}
 df_casen <- df_casen |> 
   filter(eligible == 1 | non_eligible == 1) |> 
-  filter(student != "1" & gender == "1") |> 
+  filter(student != "1" & gender == "1") |>
   filter(year >= 2000) |>
   filter(!is.na(decil) & !is.na(educ))
-
-# table(df_casen$treatment)
 ```
+
+### Education 
+
+```{r}
+df_casen$educ <- droplevels(df_casen$educ)
+
+df_casen <- df_casen |> 
+  filter(educ != "2")
+
+df_casen$educ <- droplevels(df_casen$educ)
+```
+
 
 ## Save 
 

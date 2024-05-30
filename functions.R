@@ -12,8 +12,6 @@ run_ols <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
   
   mod <- survey::svyglm(fml, design = data)
   
-  # mod <- lmtest::coeftest(mod, vcov = sandwich::vcovCL, cluster = data$cohort)
-  
   return(mod)
 }
 
@@ -48,6 +46,30 @@ plot_event_study <- function(mod1, mod2) {
     ggplot2::theme_bw()
   
   return(g)
+}
+
+#' @export
+plot_event_study_educ <- function(mod) {
+  
+  event_study_plot <- broom::tidy(mod, conf.int = T)　|>
+    dplyr::filter(stringr::str_detect(term, "eligible:period")) |> 
+    dplyr::mutate(
+      period = stringr::str_extract(term, "(?<=eligible:period)-?\\d+")|> as.numeric(), 
+      educ = dplyr::if_else(stringr::str_detect(term, "educ4"), "Superior", "Media")
+    ) |>  
+    dplyr::add_row(period = c(-3, -3), estimate = c(0,0), conf.low = c(0, 0), conf.high = c(0, 0), educ = c("Superior", "Media"))
+  
+  g <- ggplot2::ggplot(event_study_plot, 
+                       ggplot2::aes(x = period, y = estimate, ymin = conf.low, ymax = conf.high, colour = educ)) +
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
+    ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = "gray") +
+    ggplot2::geom_errorbar(width = 0.4, position = ggplot2::position_dodge(1)) +
+    ggplot2::geom_point(position = ggplot2::position_dodge(1)) +
+    ggplot2::labs(x = "Period", y = "Coefficient") + 
+    ggplot2::theme_bw()
+  
+  return(g)
+  
 }
 
 #' #' @export
