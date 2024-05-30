@@ -24,16 +24,16 @@ df_extensive <- df_extensive |>
 ```
 ```{r}
 intensive_design <- svydesign(
-  id = ~id, 
-  strata = ~region, 
+  id = ~varunit, 
+  strata = ~varstrat, 
   weights = ~expr, 
   data = df_intensive, 
   nest = TRUE, 
 )
 
 extensive_design <- svydesign(
-  id = ~id, 
-  strata = ~region, 
+  id = ~varunit, 
+  strata = ~varstrat, 
   weights = ~expr, 
   data = df_extensive, 
   nest = TRUE,
@@ -53,8 +53,8 @@ functions$plot_mean(df_intensive, "log_jobincome")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_intensive, "log_jobincome", F, F), 
-  functions$run_ols(df_intensive, "log_jobincome", T, F)
+  functions$run_ols(intensive_design, "log_jobincome", F, F), 
+  functions$run_ols(intensive_design, "log_jobincome", T, F)
 )
 ```
 
@@ -69,8 +69,8 @@ functions$plot_mean(df_intensive, "log_totalincome")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_intensive, "log_totalincome", F, F), 
-  functions$run_ols(df_intensive, "log_totalincome", T, F)
+  functions$run_ols(intensive_design, "log_totalincome", F, F), 
+  functions$run_ols(intensive_design, "log_totalincome", T, F)
 )
 ```
 
@@ -80,14 +80,13 @@ functions$plot_event_study(
 ## Working hours
 
 ```{r}
-functions$plot_mean(df_intensive |>
-                      filter(hours > 0 & hours <= 80), "log_hours")
+functions$plot_mean(df_intensive, "log_hours")
 ```
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", F, F),
-  functions$run_ols(df_intensive |> filter(hours > 0 & hours <= 80), "log_hours", T, F)
+  functions$run_ols(intensive_design, "log_hours", F, F),
+  functions$run_ols(intensive_design, "log_hours", T, F)
 )
 ```
 
@@ -103,8 +102,8 @@ functions$plot_mean(df_extensive, "lfp")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_extensive, "lfp", F, F),
-  functions$run_ols(df_extensive, "lfp", T, F)
+  functions$run_ols(extensive_design, "lfp", F, F),
+  functions$run_ols(extensive_design, "lfp", T, F)
 )
 ```
 
@@ -118,8 +117,8 @@ functions$plot_mean(df_extensive, "employment")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_extensive, "employment", F, F),
-  functions$run_ols(df_extensive, "employment", T, F)
+  functions$run_ols(extensive_design, "employment", F, F),
+  functions$run_ols(extensive_design, "employment", T, F)
 )
 ```
 
@@ -133,8 +132,8 @@ functions$plot_mean(df_extensive, "unemployment")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_extensive, "unemployment", F, F),
-  functions$run_ols(df_extensive, "unemployment", T, F)
+  functions$run_ols(extensive_design, "unemployment", F, F),
+  functions$run_ols(extensive_design, "unemployment", T, F)
 )
 ```
 
@@ -149,8 +148,8 @@ functions$plot_mean(df_extensive, "contract")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(df_extensive, "contract", F, F), 
-  functions$run_ols(df_extensive, "contract", T, F)
+  functions$run_ols(extensive_design, "contract", F, F), 
+  functions$run_ols(extensive_design, "contract", T, F)
 )
 ```
 
