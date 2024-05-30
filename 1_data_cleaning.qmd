@@ -63,6 +63,7 @@ svytable(~decil, design = test_design)
 svytable(~age, design = test_design)
 svytable(~year, design = test_design)
 svytable(~educ, design = test_design)
+svytable(~urb, design = test_design)
 ```
 
 

@@ -16,14 +16,16 @@ df_extensive <- readRDS("data/df_extensive.rds")
 
 ```{r}
 df_intensive <- df_intensive |> 
-  filter(decil <= 8) |> 
   filter(age %in% 21:30) |>
-  filter(educ == 3)
+  filter(decil <= 8) |> 
+  filter(educ == 3) |> 
+  filter(urb == 1)
 
 df_extensive <- df_extensive |> 
-  filter(decil <= 8) |> 
   filter(age %in% 21:30) |>
-  filter(educ == 3)
+  filter(decil <= 8) |> 
+  filter(educ == 3) |> 
+  filter(urb == 1)
 ```
 
 ```{r}
