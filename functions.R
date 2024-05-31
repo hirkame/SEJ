@@ -5,9 +5,9 @@ run_ols <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
   } else if (control == FALSE & hetero_edu == TRUE) {
     fml <- stats::as.formula(paste0(outcome, "~ eligible*period*educ"))
   } else if (control == TRUE & hetero_edu == FALSE) {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + educ + civilstatus + region + urb"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + age + I(age^2) + educ + civilstatus + region + urb"))
   } else {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + civilstatus + region + urb"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + age + I(age^2) + civilstatus + region + urb"))
   }
   
   mod <- survey::svyglm(fml, design = data)
@@ -55,16 +55,29 @@ plot_event_study_educ <- function(mod) {
     dplyr::filter(stringr::str_detect(term, "eligible:period")) |> 
     dplyr::mutate(
       period = stringr::str_extract(term, "(?<=eligible:period)-?\\d+")|> as.numeric(), 
-      educ = dplyr::if_else(stringr::str_detect(term, "educ4"), "Superior", "Media")
-    ) |>  
-    dplyr::add_row(period = c(-3, -3), estimate = c(0,0), conf.low = c(0, 0), conf.high = c(0, 0), educ = c("Superior", "Media"))
+      educ = dplyr::case_when(
+        stringr::str_detect(term, "educ4") ~ "Higher Education", 
+        stringr::str_detect(term, "educ3") ~ "Secondary Education",
+        stringr::str_detect(term, "educ2") ~ "Primary Education",
+        TRUE ~ "No Education"
+      )
+    ) |> 
+    dplyr::add_row(period = c(-3,-3,-3,-3), 
+                   estimate = c(0,0,0,0), 
+                   conf.low = c(0,0,0,0), 
+                   conf.high = c(0,0,0,0), 
+                   educ = c("No Education", "Primary Education", "Secondary Education", "Higher Education")) |> 
+    dplyr::mutate(
+      educ = as.factor(educ)
+    )
+    
   
   g <- ggplot2::ggplot(event_study_plot, 
                        ggplot2::aes(x = period, y = estimate, ymin = conf.low, ymax = conf.high, colour = educ)) +
     ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
     ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = "gray") +
-    ggplot2::geom_errorbar(width = 0.4, position = ggplot2::position_dodge(1)) +
-    ggplot2::geom_point(position = ggplot2::position_dodge(1)) +
+    ggplot2::geom_errorbar(width = 0.4, position = ggplot2::position_dodge(0.7)) +
+    ggplot2::geom_point(position = ggplot2::position_dodge(0.7)) +
     ggplot2::labs(x = "Period", y = "Coefficient") + 
     ggplot2::theme_bw()
   
