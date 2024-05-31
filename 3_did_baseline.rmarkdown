@@ -1,0 +1,225 @@
+```{r echo = FALSE, include=FALSE}
+library(tidyverse)
+library(survey)
+library(haven)
+
+here::i_am("3_did_baseline.qmd")
+options(box.path = here::here())
+box::use(./functions)
+box::reload(functions)
+
+df_intensive <- readRDS("data/df_intensive.rds")
+df_extensive <- readRDS("data/df_extensive.rds")
+```
+
+```{r}
+options(survey.lonely.psu="adjust")
+
+intensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_intensive, 
+  nest = TRUE
+)
+
+extensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_extensive, 
+  nest = TRUE
+)
+```
+
+
+# Intensive Margin
+
+## Job income (log)
+
+
+```{r}
+functions$plot_mean(df_intensive, "log_jobincome")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(intensive_design, "log_jobincome", F, F), 
+  functions$run_ols(intensive_design, "log_jobincome", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_jobincome", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_jobincome", T, T)
+)
+```
+
+
+
+
+## Total Income
+
+
+```{r}
+functions$plot_mean(df_intensive, "log_totalincome")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(intensive_design, "log_totalincome", F, F), 
+  functions$run_ols(intensive_design, "log_totalincome", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_totalincome", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_totalincome", T, T)
+)
+```
+
+
+
+
+## Working hours
+
+
+```{r}
+functions$plot_mean(df_intensive, "log_hours")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(intensive_design, "log_hours", F, F),
+  functions$run_ols(intensive_design, "log_hours", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_hours", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(intensive_design, "log_hours", T, T)
+)
+```
+
+
+
+
+# Extensive Margin
+
+## Labor force participation
+
+
+```{r}
+functions$plot_mean(df_extensive, "lfp")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "lfp", F, F),
+  functions$run_ols(extensive_design, "lfp", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "lfp", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "lfp", T, T)
+)
+```
+
+
+
+
+## Employment
+
+
+```{r}
+functions$plot_mean(df_extensive, "employment")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "employment", F, F),
+  functions$run_ols(extensive_design, "employment", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "employment", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "employment", T, T)
+)
+```
+
+
+
+
+## Unemployment
+
+
+```{r}
+functions$plot_mean(df_extensive, "unemployment")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "unemployment", F, F),
+  functions$run_ols(extensive_design, "unemployment", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "unemployment", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "unemployment", T, T)
+)
+```
+
+
+
+
+## Contract
+
+
+```{r}
+functions$plot_mean(df_extensive, "contract")
+```
+
+```{r}
+functions$plot_event_study(
+  functions$run_ols(extensive_design, "contract", F, F), 
+  functions$run_ols(extensive_design, "contract", T, F)
+)
+```
+
+```{r}
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "contract", F, T)
+)
+
+functions$plot_event_study_educ(
+  functions$run_ols(extensive_design, "contract", T, T)
+)
+```
+

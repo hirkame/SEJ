@@ -1,0 +1,78 @@
+```{r echo = FALSE, include=FALSE}
+library(tidyverse)
+library(survey)
+library(haven)
+
+here::i_am("2_descriptive.qmd")
+options(box.path = here::here())
+box::use(./functions)
+box::reload(functions)
+options(survey.lonely.psu="adjust")
+
+df_intensive <- readRDS("data/df_intensive.rds")
+df_extensive <- readRDS("data/df_extensive.rds")
+```
+
+
+```{r}
+test <- df_extensive |> filter(subsidio_joven == 1)
+test_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = test, 
+  nest = TRUE, 
+)
+
+svytable(~decil, design = test_design) |> prop.table()
+svytable(~age, design = test_design) 
+svytable(~year, design = test_design) |> prop.table()
+svytable(~educ, design = test_design) |> prop.table()
+svytable(~urb, design = test_design) |> prop.table()
+svytable(~region, design = test_design) |> prop.table()
+```
+
+```{r}
+df_intensive <- df_intensive |> 
+  filter(year != 2009) |> 
+  filter(age %in% 21:30) |>
+  filter(decil <= 8) |>
+  filter(educ == 3) |>
+  filter(urb == 1)
+
+df_takeup <- df_intensive |> 
+  filter(subsidio_joven == 1)
+
+intensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_intensive, 
+  nest = TRUE
+)
+
+extensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_extensive, 
+  nest = TRUE,
+)
+
+takeup_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_takeup, 
+  nest = TRUE,
+)
+
+# Extract tables
+takeup_table <- svytable(~region + year, design = takeup_design)
+intensive_table <- svytable(~region + year, design = intensive_design)
+
+# Subset intensive_table to match the years in takeup_table
+intensive_table_subset <- intensive_table[, colnames(takeup_table)]
+takeup_table / intensive_table_subset
+```
+

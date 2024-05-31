@@ -5,9 +5,9 @@ run_ols <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
   } else if (control == FALSE & hetero_edu == TRUE) {
     fml <- stats::as.formula(paste0(outcome, "~ eligible*period*educ"))
   } else if (control == TRUE & hetero_edu == FALSE) {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region + urb"))
   } else {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + schooling + I(schooling^2) + civilstatus + region + urb"))
   }
   
   mod <- survey::svyglm(fml, design = data)
