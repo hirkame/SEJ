@@ -7,7 +7,6 @@ library(survey)
 
 ## Preprocess
 
--   Drop 1 observation
 
 ```{r}
 raw_data <- read_dta("data/CASEN_allyears_v9.dta")
@@ -15,31 +14,19 @@ raw_data <- read_dta("data/CASEN_allyears_v9.dta")
 df_casen <- as.data.frame(raw_data)
 
 df_casen <- df_casen |> 
+  filter(year >= 2000) |> 
   select(-c(municipality, id)) |> 
-  # drop 1 obs. 
-  filter(
-    if_any(
-      .fns = ~ !is.na(.x),
-      .cols = c(region, urb, age, gender, totalincome_hh)
-    )
-  ) |>
   mutate(
     # Substitute NA by 0
     across(
       .fns = ~ if_else(is.na(.x), 0, .x),
-      .cols = c(subsidio_joven, subsidio_joven_income, 
+      .cols = c(subsidio_joven, subsidio_joven_income,
                 jobincome, totalincome, totalincome_hh)
     ),
     across(
       .fns = ~ as.factor(.x), 
       .cols = c(region, urb, gender, student, civilstatus, educ)
     ),
-    # New level of factor
-    # across(
-    #   .fns = ~ fct_na_value_to_level(as.factor(.x), level = "NA"), 
-    #   .cols = c(familysize, civilstatus, educ, decil, activ)
-    # ),
-    # familysize = fct_collapse(familysize, ">=11" = c('11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '25')), 
     experience = age - schooling - 6, 
     lfp = if_else(activ %in% 1:2, 1, 0), 
     employment = if_else(activ == 1, 1, 0), 
@@ -52,20 +39,16 @@ df_casen <- df_casen |>
 
 ## DID variables
 
--   Eligible: (i) individuals aged between 18 and 25; (ii) individuals who actually took subsidies
-
--   Non-eligible: individuals aged between 26 and 29 and those who do not take subsidies
-
 ```{r}
 df_casen <- df_casen |> 
   mutate(
     eligible = if_else(
-      age %in% 19:24 & schooling >= 12, 
+      age %in% 19:24,
       1, 
       0
     ), 
     non_eligible = if_else(
-      (age %in% 26:31) & (subsidio_joven == 0) & schooling >= 12, 
+      (age %in% 26:31) & (subsidio_joven == 0), 
       1,
       0
     ), 
@@ -73,26 +56,29 @@ df_casen <- df_casen |>
     lineartrend = year - 2009, 
     period = as.factor(year - 2009) |> relevel(ref = "-3"),
     gname = if_else(eligible == 1, 2010, 0), 
-  ) 
+  )
 ```
 
 ## Sample restriction
 
 ```{r}
 df_casen <- df_casen |> 
-  filter(eligible == 1 | non_eligible == 1) |> 
-  filter(student != "1" & gender == "1") |>
-  filter(year >= 2000) |>
-  filter(!is.na(decil) & !is.na(educ))
-```
-
-### Education 
-
-```{r}
-df_casen$educ <- droplevels(df_casen$educ)
+  filter(eligible == 1 | non_eligible == 1) 
+nrow(df_casen)
 
 df_casen <- df_casen |> 
-  filter(educ != "2")
+  filter(student != "1") 
+nrow(df_casen)
+
+df_casen <- df_casen |> 
+  filter(gender != "1") 
+nrow(df_casen)
+
+df_casen <- df_casen |> 
+  filter(
+    !is.na(educ)
+  )
+nrow(df_casen)
 
 df_casen$educ <- droplevels(df_casen$educ)
 ```
@@ -105,9 +91,6 @@ df_intensive <- df_casen |>
   filter(
     jobincome > 0 & totalincome > 0 
   ) |> 
-  # filter(
-  #   jobincome <= quantile(jobincome, 0.99) & jobincome <= quantile(totalincome, 0.99)
-  # ) |> 
   mutate(
     across(
       .cols = c(jobincome, totalincome, hours), 
@@ -115,15 +98,15 @@ df_intensive <- df_casen |>
       .names = "log_{.col}"
     )
   ) %>%
-  filter(hours > 0) %>%
-  filter(hours < 80) %>%
-  filter(!is.na(log_hours))
+  filter(hours > 0 & hours < 80 & !is.na(log_hours))
+nrow(df_intensive)
 
 saveRDS(df_intensive, "data/df_intensive.rds")
 
 
 df_extensive <- df_casen
 saveRDS(df_extensive, "data/df_extensive.rds")
+nrow(df_extensive)
 ```
 
 
