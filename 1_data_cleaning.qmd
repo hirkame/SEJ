@@ -27,7 +27,7 @@ df_casen <- df_casen |>
       .fns = ~ as.factor(.x), 
       .cols = c(region, urb, gender, student, civilstatus, educ)
     ),
-    educ = relevel(educ, ref = "3"),
+    educ = relevel(educ, ref = "1"),
     experience = age - schooling - 6, 
     lfp = if_else(activ %in% 1:2, 1, 0), 
     employment = if_else(activ == 1, 1, 0), 
