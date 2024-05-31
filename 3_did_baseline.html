@@ -113,88 +113,115 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_jobincome"</span>, F, F), </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_jobincome"</span>, T, F)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_jobincome"</span>, F, T)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_jobincome"</span>, T, T)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_jobincome", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 </section>
 <section id="total-income" class="level2">
 <h2 class="anchored" data-anchor-id="total-income">Total Income</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_intensive, <span class="st">"log_totalincome"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_intensive, <span class="st">"log_totalincome"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, F, F), </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, T, F)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_totalincome", F, T) -->
+<!-- ) -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_totalincome", T, T) -->
+<!-- ) -->
+<!-- ``` -->
+</section>
+<section id="working-hours" class="level2">
+<h2 class="anchored" data-anchor-id="working-hours">Working hours</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, F, F), </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, T, F)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_intensive, <span class="st">"log_hours"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, F, T)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, F, F),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, T, F)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, T, T)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-</section>
-<section id="working-hours" class="level2">
-<h2 class="anchored" data-anchor-id="working-hours">Working hours</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_intensive, <span class="st">"log_hours"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, F, F),</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, T, F)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, F, T)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, T, T)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_hours", F, T) -->
+<!-- ) -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_hours", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 </section>
 </section>
 <section id="extensive-margin" class="level1">
@@ -202,130 +229,170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="labor-force-participation" class="level2">
 <h2 class="anchored" data-anchor-id="labor-force-participation">Labor force participation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"lfp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"lfp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, F, F),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, T, F)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "lfp", F, T) -->
+<!-- ) -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "lfp", T, T) -->
+<!-- ) -->
+<!-- ``` -->
+</section>
+<section id="employment" class="level2">
+<h2 class="anchored" data-anchor-id="employment">Employment</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"employment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, F, F),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, T, F)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "employment", F, T) -->
+<!-- ) -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "employment", T, T) -->
+<!-- ) -->
+<!-- ``` -->
+</section>
+<section id="unemployment" class="level2">
+<h2 class="anchored" data-anchor-id="unemployment">Unemployment</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, F, F),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, T, F)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"unemployment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, F, T)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, F, F),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, T, F)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, T, T)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
 </div>
-</div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "unemployment", F, T) -->
+<!-- ) -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "unemployment", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 </section>
-<section id="employment" class="level2">
-<h2 class="anchored" data-anchor-id="employment">Employment</h2>
+<section id="contract" class="level2">
+<h2 class="anchored" data-anchor-id="contract">Contract</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"employment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"contract"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, F, F),</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, T, F)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, F, F), </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, T, F)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(g): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.glm(glm.object): observations with zero weight not used for
+calculating dispersion</code></pre>
+</div>
 <div class="cell-output-display">
 <p><img src="3_did_baseline_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, F, T)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, T, T)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="unemployment" class="level2">
-<h2 class="anchored" data-anchor-id="unemployment">Unemployment</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"unemployment"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, F, F),</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, T, F)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, F, T)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, T, T)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-</section>
-<section id="contract" class="level2">
-<h2 class="anchored" data-anchor-id="contract">Contract</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_mean</span>(df_extensive, <span class="st">"contract"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, F, F), </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, T, F)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, F, T)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study_educ</span>(</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, T, T)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="3_did_baseline_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "contract", F, T) -->
+<!-- ) -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "contract", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 </section>
 </section>
 

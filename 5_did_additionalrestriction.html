@@ -93,10 +93,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_jobincome"</span>, F, F), </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_jobincome"</span>, T, F)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> functions<span class="sc">$</span><span class="fu">run_ols_2</span>(intensive_design, <span class="st">"log_jobincome"</span>, F, F)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> functions<span class="sc">$</span><span class="fu">run_ols_2</span>(intensive_design, <span class="st">"log_jobincome"</span>, T, F)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  m1,m2</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -112,8 +113,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, F, F), </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_totalincome"</span>, T, F)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(intensive_design, <span class="st">"log_totalincome"</span>, F, F), </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(intensive_design, <span class="st">"log_totalincome"</span>, T, F)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
@@ -130,8 +131,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, F, F),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(intensive_design, <span class="st">"log_hours"</span>, T, F)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(intensive_design, <span class="st">"log_hours"</span>, F, F),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(intensive_design, <span class="st">"log_hours"</span>, T, F)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
@@ -151,8 +152,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, F, F),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"lfp"</span>, T, F)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"lfp"</span>, F, F),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"lfp"</span>, T, F)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
@@ -169,8 +170,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, F, F),</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"employment"</span>, T, F)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"employment"</span>, F, F),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"employment"</span>, T, F)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
@@ -187,8 +188,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, F, F),</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"unemployment"</span>, T, F)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"unemployment"</span>, F, F),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"unemployment"</span>, T, F)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
@@ -205,8 +206,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>functions<span class="sc">$</span><span class="fu">plot_event_study</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, F, F), </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols</span>(extensive_design, <span class="st">"contract"</span>, T, F)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"contract"</span>, F, F), </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  functions<span class="sc">$</span><span class="fu">run_ols_2</span>(extensive_design, <span class="st">"contract"</span>, T, F)</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="5_did_additionalrestriction_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>

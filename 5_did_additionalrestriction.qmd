@@ -17,20 +17,18 @@ df_extensive <- readRDS("data/df_extensive.rds")
 
 ```{r echo=FALSE}
 df_intensive <- df_intensive |> 
-  filter(year != 2009) |> 
-  filter(age %in% 21:30 & educ == 3) |>
+  filter(age %in% 21:30 & educ %in% c("3", "4")) |>
   filter(decil <= 8) |>
-  # filter(urb == 1) |> 
-  filter(!region %in% c(1, 2, 12))
+  filter(urb == 1) |> 
+  filter(!region %in% c(1, 2, 12)) |> 
+  filter(civilstatus %in% c(2,5))
 
 df_extensive <- df_extensive |> 
-  filter(year != 2009) |> 
-  filter(age %in% 21:30) |>
-  filter(decil <= 8) |> 
-  filter(educ == 3) |> 
-  # filter(urb == 1) |> 
-  filter(!region %in% c(1, 2, 12))
-
+  filter(age %in% 21:30 & educ %in% c("3", "4")) |>
+  filter(decil <= 8) |>
+  filter(urb == 1) |> 
+  filter(!region %in% c(1, 2, 12)) |> 
+  filter(civilstatus %in% c(2,5))
 
 intensive_design <- svydesign(
   id = ~varunit, 
@@ -59,9 +57,10 @@ functions$plot_mean(df_intensive, "log_jobincome")
 
 
 ```{r}
+m1 <- functions$run_ols_2(intensive_design, "log_jobincome", F, F)
+m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
 functions$plot_event_study(
-  functions$run_ols(intensive_design, "log_jobincome", F, F), 
-  functions$run_ols(intensive_design, "log_jobincome", T, F)
+  m1,m2
 )
 ```
 
@@ -75,8 +74,8 @@ functions$plot_mean(df_intensive, "log_totalincome")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(intensive_design, "log_totalincome", F, F), 
-  functions$run_ols(intensive_design, "log_totalincome", T, F)
+  functions$run_ols_2(intensive_design, "log_totalincome", F, F), 
+  functions$run_ols_2(intensive_design, "log_totalincome", T, F)
 )
 ```
 
@@ -90,8 +89,8 @@ functions$plot_mean(df_intensive, "log_hours")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(intensive_design, "log_hours", F, F),
-  functions$run_ols(intensive_design, "log_hours", T, F)
+  functions$run_ols_2(intensive_design, "log_hours", F, F),
+  functions$run_ols_2(intensive_design, "log_hours", T, F)
 )
 ```
 
@@ -106,8 +105,8 @@ functions$plot_mean(df_extensive, "lfp")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(extensive_design, "lfp", F, F),
-  functions$run_ols(extensive_design, "lfp", T, F)
+  functions$run_ols_2(extensive_design, "lfp", F, F),
+  functions$run_ols_2(extensive_design, "lfp", T, F)
 )
 ```
 
@@ -121,8 +120,8 @@ functions$plot_mean(df_extensive, "employment")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(extensive_design, "employment", F, F),
-  functions$run_ols(extensive_design, "employment", T, F)
+  functions$run_ols_2(extensive_design, "employment", F, F),
+  functions$run_ols_2(extensive_design, "employment", T, F)
 )
 ```
 
@@ -135,8 +134,8 @@ functions$plot_mean(df_extensive, "unemployment")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(extensive_design, "unemployment", F, F),
-  functions$run_ols(extensive_design, "unemployment", T, F)
+  functions$run_ols_2(extensive_design, "unemployment", F, F),
+  functions$run_ols_2(extensive_design, "unemployment", T, F)
 )
 ```
 
@@ -150,8 +149,8 @@ functions$plot_mean(df_extensive, "contract")
 
 ```{r}
 functions$plot_event_study(
-  functions$run_ols(extensive_design, "contract", F, F), 
-  functions$run_ols(extensive_design, "contract", T, F)
+  functions$run_ols_2(extensive_design, "contract", F, F), 
+  functions$run_ols_2(extensive_design, "contract", T, F)
 )
 ```
 

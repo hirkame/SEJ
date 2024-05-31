@@ -53,17 +53,6 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_jobincome", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_jobincome", T, T)
-)
-```
-
-
 
 ## Total Income
 
@@ -79,16 +68,6 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_totalincome", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_totalincome", T, T)
-)
-```
-
 
 
 ## Working hours
@@ -101,16 +80,6 @@ functions$plot_mean(df_intensive, "log_hours")
 functions$plot_event_study(
   functions$run_ols(intensive_design, "log_hours", F, F),
   functions$run_ols(intensive_design, "log_hours", T, F)
-)
-```
-
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_hours", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_hours", T, T)
 )
 ```
 
@@ -131,15 +100,6 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "lfp", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "lfp", T, T)
-)
-```
 
 
 
@@ -156,15 +116,6 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "employment", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "employment", T, T)
-)
-```
 
 
 
@@ -178,16 +129,6 @@ functions$plot_mean(df_extensive, "unemployment")
 functions$plot_event_study(
   functions$run_ols(extensive_design, "unemployment", F, F),
   functions$run_ols(extensive_design, "unemployment", T, F)
-)
-```
-
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "unemployment", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "unemployment", T, T)
 )
 ```
 
@@ -207,13 +148,4 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "contract", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "contract", T, T)
-)
-```
 

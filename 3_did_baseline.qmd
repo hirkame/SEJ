@@ -48,15 +48,11 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_jobincome", F, T)
-)
-
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_jobincome", T, T)
-)
-```
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_jobincome", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
 
 
@@ -74,15 +70,15 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_totalincome", F, T)
-)
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_totalincome", F, T) -->
+<!-- ) -->
 
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_totalincome", T, T)
-)
-```
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_totalincome", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
 
 
@@ -99,15 +95,15 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_hours", F, T)
-)
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_hours", F, T) -->
+<!-- ) -->
 
-functions$plot_event_study_educ(
-  functions$run_ols(intensive_design, "log_hours", T, T)
-)
-```
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(intensive_design, "log_hours", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
 
 
@@ -126,15 +122,15 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "lfp", F, T)
-)
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "lfp", F, T) -->
+<!-- ) -->
 
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "lfp", T, T)
-)
-```
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "lfp", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
 
 
@@ -151,15 +147,15 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "employment", F, T)
-)
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "employment", F, T) -->
+<!-- ) -->
 
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "employment", T, T)
-)
-```
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "employment", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
 
 
@@ -176,15 +172,15 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "unemployment", F, T)
-)
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "unemployment", F, T) -->
+<!-- ) -->
 
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "unemployment", T, T)
-)
-```
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "unemployment", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
 
 
@@ -202,13 +198,13 @@ functions$plot_event_study(
 )
 ```
 
-```{r}
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "contract", F, T)
-)
+<!-- ```{r} -->
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "contract", F, T) -->
+<!-- ) -->
 
-functions$plot_event_study_educ(
-  functions$run_ols(extensive_design, "contract", T, T)
-)
-```
+<!-- functions$plot_event_study_educ( -->
+<!--   functions$run_ols(extensive_design, "contract", T, T) -->
+<!-- ) -->
+<!-- ``` -->
 
