@@ -155,7 +155,7 @@ diff_table_ex <- results_extensive |>
   round(2) |> 
   arrange(year)
 
-diff_table_ex <- xtable(diff_table, caption = "Simple Difference (Extensive Margin)", 
+diff_table_ex <- xtable(diff_table_ex, caption = "Simple Comparison of Extensive Margins", 
                         label = "tab:diff-table-extensive")
 ```
 
