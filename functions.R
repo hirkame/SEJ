@@ -45,25 +45,10 @@ prep_event_study_plot <- function(model) {
 }
 
 #' @export
-plot_event_study <- function(mod1, mod2) {
-  event_study_plot <- rbind(
-    prep_event_study_plot(mod1) |>
-      dplyr::mutate(model = "1. No Control"),
-    prep_event_study_plot(mod2) |>
-      dplyr::mutate(model = "2. Control")
-  )
-  
-  g <- ggplot2::ggplot(event_study_plot, ggplot2::aes(x = period, y = estimate, ymin = conf.low, ymax = conf.high)) +
-    ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
-    ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = "gray") +
-    ggplot2::geom_errorbar(width = 0.4) +
-    ggplot2::geom_point() +
-    ggplot2::facet_wrap(. ~ model) +
-    ggplot2::labs(x = "Period", y = "Coefficient") + 
-    ggplot2::theme_bw()
-  
-  return(g)
-}
+m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
+functions$plot_event_study(
+  m2
+)
 
 #' @export
 plot_event_study_educ <- function(mod) {

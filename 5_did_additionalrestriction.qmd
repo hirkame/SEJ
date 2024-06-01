@@ -3,6 +3,11 @@ library(tidyverse)
 library(survey)
 library(haven)
 
+rm(df_intensive)
+rm(df_extensive) 
+rm(intensive_design)
+rm(extensive_design)
+
 here::i_am("5_did_additionalrestriction.qmd")
 options(box.path = here::here())
 box::use(./functions)
@@ -57,10 +62,9 @@ functions$plot_mean(df_intensive, "log_jobincome")
 
 
 ```{r}
-m1 <- functions$run_ols_2(intensive_design, "log_jobincome", F, F)
 m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
 functions$plot_event_study(
-  m1,m2
+  m2
 )
 ```
 
