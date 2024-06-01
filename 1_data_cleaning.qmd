@@ -82,6 +82,10 @@ df_casen <- df_casen |>
 nrow(df_casen)
 
 df_casen$educ <- droplevels(df_casen$educ)
+
+df_casen <- df_casen |> 
+  filter(!is.na(civilstatus) & !is.na(experience))
+nrow(df_casen)
 ```
 
 
