@@ -161,12 +161,18 @@ plot_mean <- function(data, outcome) {
       .by = c(eligible, period)
     ) |> 
     dplyr::mutate(eligible = as.factor(eligible), period= as.numeric(as.character(period)))
-  
+  label_years <- function(periods) {
+    periods + 2009
+  }
   g <- ggplot2::ggplot(data, ggplot2::aes(x = period, y = mean, group = eligible, colour = eligible)) +
     ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = 1) +
     ggplot2::geom_point() +
     ggplot2::geom_line() + 
-    ggplot2::labs(x = "Period", y = "Mean Outcome", title = paste0(outcome, " (Mean)")) + 
+    ggplot2::scale_x_continuous(
+      labels = label_years,
+      breaks = scales::pretty_breaks()
+    ) +
+    ggplot2::labs(x = "Year", y = paste0(outcome, "Mean"), title = paste0(outcome, " (Mean)")) + 
     ggplot2::theme_bw()
   
   return(g)
