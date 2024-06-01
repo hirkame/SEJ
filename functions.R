@@ -164,19 +164,20 @@ plot_mean <- function(data, outcome) {
   label_years <- function(periods) {
     periods + 2009
   }
+  breaks <- seq(min(data$period), max(data$period), by = 2)
   g <- ggplot2::ggplot(data, ggplot2::aes(x = period, y = mean, group = eligible, colour = eligible)) +
     ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = 1) +
     ggplot2::geom_point() +
     ggplot2::geom_line() + 
     ggplot2::scale_x_continuous(
-      labels = label_years,
-      breaks = scales::pretty_breaks()
+      breaks = breaks,
+      labels = label_years(breaks)
     ) +
-    ggplot2::labs(x = "Year", y = paste0(outcome, "Mean"), title = paste0(outcome, " (Mean)")) + 
+    ggplot2::labs(x = "Year", y = paste0("Mean ", outcome), title = paste0(outcome)) 
     ggplot2::theme_bw()
   
   return(g)
-}
+  }
 
 
 #' #' @export
