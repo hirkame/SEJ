@@ -58,7 +58,7 @@ plot_event_study <- function(mod, output_title = "Event Study") {
     ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = "gray") +  # Dashed line at period -3 (2006)
     ggplot2::geom_errorbar(width = 0.4) +
     ggplot2::geom_point() +
-    ggplot2::labs(x = "Years", y = "Coefficient", title = output_title) + 
+    ggplot2::labs(x = "Year", y = "Coefficient", title = output_title) + 
     ggplot2::scale_x_continuous(breaks = breaks, labels = labels) +
     ggplot2::theme_bw()
   

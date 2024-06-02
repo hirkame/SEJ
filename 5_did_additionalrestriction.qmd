@@ -63,9 +63,7 @@ functions$plot_mean(df_intensive, "log_jobincome")
 
 ```{r}
 m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
-functions$plot_event_study(
-  m2
-)
+functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
 ```
 
 
@@ -77,10 +75,11 @@ functions$plot_mean(df_intensive, "log_totalincome")
 
 
 ```{r}
-functions$plot_event_study(
-  functions$run_ols_2(intensive_design, "log_totalincome", F, F), 
-  functions$run_ols_2(intensive_design, "log_totalincome", T, F)
-)
+
+m2 <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
+functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
+
+
 ```
 
 
@@ -92,10 +91,8 @@ functions$plot_mean(df_intensive, "log_hours")
 ```
 
 ```{r}
-functions$plot_event_study(
-  functions$run_ols_2(intensive_design, "log_hours", F, F),
-  functions$run_ols_2(intensive_design, "log_hours", T, F)
-)
+m2 <- functions$run_ols_2(intensive_design, "log_hours", T, F)
+functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
 ```
 
 
@@ -108,10 +105,9 @@ functions$plot_mean(df_extensive, "lfp")
 ```
 
 ```{r}
-functions$plot_event_study(
-  functions$run_ols_2(extensive_design, "lfp", F, F),
-  functions$run_ols_2(extensive_design, "lfp", T, F)
-)
+m2 <- functions$run_ols_2(extensive_design, "lfp", T, F)
+functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
+
 ```
 
 
@@ -123,10 +119,8 @@ functions$plot_mean(df_extensive, "employment")
 ```
 
 ```{r}
-functions$plot_event_study(
-  functions$run_ols_2(extensive_design, "employment", F, F),
-  functions$run_ols_2(extensive_design, "employment", T, F)
-)
+m2 <- functions$run_ols_2(extensive_design, "employment", T, F)
+functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
 ```
 
 
@@ -137,10 +131,8 @@ functions$plot_mean(df_extensive, "unemployment")
 ```
 
 ```{r}
-functions$plot_event_study(
-  functions$run_ols_2(extensive_design, "unemployment", F, F),
-  functions$run_ols_2(extensive_design, "unemployment", T, F)
-)
+m2 <- functions$run_ols_2(extensive_design, "unemployment", T, F)
+functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
 ```
 
 
@@ -152,10 +144,8 @@ functions$plot_mean(df_extensive, "contract")
 
 
 ```{r}
-functions$plot_event_study(
-  functions$run_ols_2(extensive_design, "contract", F, F), 
-  functions$run_ols_2(extensive_design, "contract", T, F)
-)
+m2 <- functions$run_ols_2(extensive_design, "contract", T, F)
+functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
 ```
 
 
