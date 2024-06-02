@@ -2,11 +2,12 @@
 library(tidyverse)
 library(survey)
 library(haven)
+library(gridExtra)
 
-rm(df_intensive)
-rm(df_extensive) 
-rm(intensive_design)
-rm(extensive_design)
+#rm(df_intensive)
+#rm(df_extensive) 
+#rm(intensive_design)
+#rm(extensive_design)
 
 here::i_am("5_did_additionalrestriction.qmd")
 options(box.path = here::here())
@@ -95,6 +96,62 @@ m2 <- functions$run_ols_2(intensive_design, "log_hours", T, F)
 functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
 ```
 
+Combining Intensive Margin Figures 
+```{r}
+
+# Generate the individual plots
+plot1 <- functions$plot_mean(df_intensive, "log_jobincome")
+plot2 <- functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
+plot3 <- functions$plot_mean(df_intensive, "log_totalincome")
+plot4 <- functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
+plot5 <- functions$plot_mean(df_intensive, "log_hours")
+plot6 <- functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
+
+# Arrange the plots into a 2x3 grid
+combined_plot <- grid.arrange(plot1, plot2, plot3, plot4, plot5, plot6, ncol = 2, nrow = 3)
+
+# Export the combined figure to a file
+ggsave("combined_plot.png", combined_plot, width = 18, height = 12)
+
+
+```
+
+Extracting Coefficients & SEs from event studies
+```{r}
+
+# Generate the models (assuming you have different models for each plot)
+m2_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
+m2_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
+m2_hours <- functions$run_ols_2(intensive_design, "log_hours", T, F)
+
+# Function to extract tidy model results along with number of observations
+extract_model_info <- function(model) {
+  tidy_model <- broom::tidy(model, conf.int = TRUE) %>%
+    filter(str_detect(term, "eligible:period")) %>%
+    select(term, estimate, std.error, p.value)
+  
+  n_obs <- stats::nobs(model)
+  
+  tidy_model <- tidy_model %>%
+    mutate(n_obs = n_obs)
+  
+  return(tidy_model)
+}
+
+# Extract coefficients, standard errors, p-values, and number of observations for each model
+tidy_m2_jobincome <- extract_model_info(m2_jobincome)
+tidy_m2_totalincome <- extract_model_info(m2_totalincome)
+tidy_m2_hours <- extract_model_info(m2_hours)
+
+# Display the results
+tidy_m2_jobincome
+tidy_m2_totalincome
+tidy_m2_hours
+
+
+
+```
+
 
 # Extensive Margin
 
@@ -146,6 +203,63 @@ functions$plot_mean(df_extensive, "contract")
 ```{r}
 m2 <- functions$run_ols_2(extensive_design, "contract", T, F)
 functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
+```
+
+Combined Extensive Margin Figures
+```{r}
+
+plot7 <- functions$plot_mean(df_extensive, "lfp")
+plot8 <- functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
+plot9 <- functions$plot_mean(df_extensive, "employment")
+plot10 <- functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
+plot11 <- functions$plot_mean(df_extensive, "unemployment")
+plot12 <- functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
+plot13 <- functions$plot_mean(df_extensive, "contract")
+plot14 <- functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
+
+
+combined_plot2 <- grid.arrange(plot7, plot8, plot9, plot10, plot11, plot12, plot13, plot14, ncol = 2, nrow = 4)
+
+# Export the combined figure to a file
+ggsave("combined_plot2.png", combined_plot2, width = 18, height = 12)
+```
+
+
+Extracting coefficients and SEs from event studies 
+```{r}
+
+m2_lfp <- functions$run_ols_2(extensive_design, "lfp", T, F)
+m2_employment <- functions$run_ols_2(extensive_design, "employment", T, F)
+m2_unemployment <- functions$run_ols_2(extensive_design, "unemployment", T, F)
+m2_contract <- functions$run_ols_2(extensive_design, "contract", T, F)
+
+# Function to extract tidy model results along with number of observations
+extract_model_info2 <- function(model) {
+  tidy_model <- broom::tidy(model, conf.int = TRUE) %>%
+    filter(str_detect(term, "eligible:period")) %>%
+    select(term, estimate, std.error, p.value)
+  
+  n_obs <- stats::nobs(model)
+  
+  tidy_model <- tidy_model %>%
+    mutate(n_obs = n_obs)
+  
+  return(tidy_model)
+}
+
+# Extract coefficients, standard errors, p-values, and number of observations for each model
+tidy_m2_lfp <- extract_model_info2(m2_lfp)
+tidy_m2_employment <- extract_model_info2(m2_employment)
+tidy_m2_unemployment <- extract_model_info2(m2_unemployment)
+tidy_m2_contract <- extract_model_info2(m2_contract)
+
+# Display the results
+tidy_m2_lfp
+tidy_m2_employment
+tidy_m2_unemployment
+tidy_m2_contract
+
+
 ```
 
 
