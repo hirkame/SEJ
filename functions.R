@@ -35,28 +35,17 @@ run_ols_2 <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
 # Extract coefficients and confidence intervals for the OLS
 #' @export
 prep_event_study_plot <- function(model) {
-  
-  df_model <- broom::tidy(model, conf.int = T)　|>
-    dplyr::filter(stringr::str_detect(term, "eligible:period")) |> 
-    dplyr::mutate(period = stringr::str_replace(term, "eligible:period", "") |> as.numeric()) |> 
+  df_model <- broom::tidy(model, conf.int = TRUE) |>
+    dplyr::filter(stringr::str_detect(term, "eligible:period")) |>
+    dplyr::mutate(period = stringr::str_replace(term, "eligible:period", "") |> as.numeric()) |>
     dplyr::add_row(period = -3, estimate = 0, conf.low = 0, conf.high = 0)
-  
   return(df_model)
 }
 
 #' @export
-plot_event_study <- function(mod1, mod2 = NULL) {
-  if (is.null(mod2)) {
-    event_study_plot <- prep_event_study_plot(mod1) |> 
-      dplyr::mutate(model = "Model 1")
-  } else {
-    event_study_plot <- rbind(
-      prep_event_study_plot(mod1) |> 
-        dplyr::mutate(model = "1. No Control"),
-      prep_event_study_plot(mod2) |> 
-        dplyr::mutate(model = "2. Control")
-    )
-  }
+plot_event_study <- function(mod, output_title = "Event Study") {
+  event_study_plot <- prep_event_study_plot(mod) |>
+    dplyr::mutate(model = "Control")
   
   # Calculate the range of periods to set the x-axis limits and breaks
   min_period <- min(event_study_plot$period)
@@ -66,11 +55,10 @@ plot_event_study <- function(mod1, mod2 = NULL) {
   
   g <- ggplot2::ggplot(event_study_plot, ggplot2::aes(x = period, y = estimate, ymin = conf.low, ymax = conf.high)) +
     ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
-    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", colour = "gray") +  # Change xintercept to 0
+    ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = "gray") +  # Dashed line at period -3 (2006)
     ggplot2::geom_errorbar(width = 0.4) +
     ggplot2::geom_point() +
-    if (!is.null(mod2)) ggplot2::facet_wrap(. ~ model) +
-    ggplot2::labs(x = "Years", y = "Coefficient") + 
+    ggplot2::labs(x = "Years", y = "Coefficient", title = output_title) + 
     ggplot2::scale_x_continuous(breaks = breaks, labels = labels) +
     ggplot2::theme_bw()
   
