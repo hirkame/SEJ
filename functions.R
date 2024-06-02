@@ -45,10 +45,40 @@ prep_event_study_plot <- function(model) {
 }
 
 #' @export
-m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
-functions$plot_event_study(
-  m2
-)
+plot_event_study <- function(mod1, mod2 = NULL) {
+  if (is.null(mod2)) {
+    event_study_plot <- prep_event_study_plot(mod1) |> 
+      dplyr::mutate(model = "Model 1")
+  } else {
+    event_study_plot <- rbind(
+      prep_event_study_plot(mod1) |> 
+        dplyr::mutate(model = "1. No Control"),
+      prep_event_study_plot(mod2) |> 
+        dplyr::mutate(model = "2. Control")
+    )
+  }
+  
+  # Calculate the range of periods to set the x-axis limits and breaks
+  min_period <- min(event_study_plot$period)
+  max_period <- max(event_study_plot$period)
+  breaks <- seq(min_period, max_period, by = 2)
+  labels <- breaks + 2009  # Adjust the labels to reflect the years
+  
+  g <- ggplot2::ggplot(event_study_plot, ggplot2::aes(x = period, y = estimate, ymin = conf.low, ymax = conf.high)) +
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "gray") +
+    ggplot2::geom_vline(xintercept = 0, linetype = "dashed", colour = "gray") +  # Change xintercept to 0
+    ggplot2::geom_errorbar(width = 0.4) +
+    ggplot2::geom_point() +
+    if (!is.null(mod2)) ggplot2::facet_wrap(. ~ model) +
+    ggplot2::labs(x = "Years", y = "Coefficient") + 
+    ggplot2::scale_x_continuous(breaks = breaks, labels = labels) +
+    ggplot2::theme_bw()
+  
+  return(g)
+}
+
+
+
 
 #' @export
 plot_event_study_educ <- function(mod) {
