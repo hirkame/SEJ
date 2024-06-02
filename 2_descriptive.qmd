@@ -18,168 +18,145 @@ df_extensive <- readRDS("data/df_extensive.rds")
 
 # Pre-treatment characteristics
 
-```{r}
-balance_ex <- df_extensive  |> 
-  filter(year <= 2009) |> 
-  summarise(
-    `Employment` = mean(employment)*100, 
-    `Unemployment` = mean(employment)*100, 
-    `Contract` = mean(contract)*100,
-    Age = mean(age), 
-    # age_SD = sd(age),
-    # Experience = mean(experience),
-    # Experience_SD = sd(experience),
-    prop_educ = list(prop.table(table(educ))*100),
-    prop_civilstatus = list(prop.table(table(civilstatus))*100),
-    # prop_region = list(prop.table(table(region))),
-    prop_urb = list(prop.table(table(urb))*100), 
-    nob = n(), 
-    .by = c(eligible)
-  ) |>
-  unnest_wider(prop_educ, names_sep = "_") |>
-  unnest_wider(prop_civilstatus, names_sep = "_") |>
-  unnest_wider(prop_urb, names_sep = "_") |> 
-  mutate(Category = "Extensive", .before = everything())
+```{r echo = FALSE}
+df_pre_in <- df_intensive  |> 
+  filter(year < 2009) 
+df_pre_ex <- df_extensive  |> 
+  filter(year < 2009)
 
-balance_in <- df_intensive  |> 
-  filter(year <= 2009) |> 
-  summarise(
-    `Employment` = mean(employment)*100, 
-    `Unemployment` = mean(employment)*100, 
-    `Contract` = mean(contract)*100,
-    `Log of Job Income` = mean(log_jobincome), 
-    `Log of Total Income` = mean(log_totalincome), 
-    `Working Hours` = mean(log_hours), 
-    Age = mean(age), 
-    # age_SD = sd(age),
-    # Experience = mean(experience),
-    # Experience_SD = sd(experience),
-    prop_educ = list(prop.table(table(educ))*100),
-    prop_civilstatus = list(prop.table(table(civilstatus))*100),
-    # prop_region = list(prop.table(table(region))),
-    prop_urb = list(prop.table(table(urb))*100), 
-    nob = n(),
-    .by = c(eligible)
-  ) |>
-  unnest_wider(col = c(prop_educ, prop_civilstatus, prop_urb), names_sep = "_") |> 
-  mutate(Category = "Intensive", .before = everything())
+intensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_pre_in, 
+  nest = TRUE
+)
+extensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_pre_ex, 
+  nest = TRUE,
+)
 
-balance <- bind_rows(balance_ex, balance_in) |> 
-  mutate(
-    eligible = if_else(eligible == 1, "Eligible", "Non-eligible") 
-  ) |> 
-  arrange(Category, eligible)
+t1 <- svyby(
+  ~ age + educ + civilstatus + urb  + employment + unemployment + contract, 
+  ~ eligible, 
+  extensive_design, 
+  svymean
+)
 
-# Transpose the combined_balance dataframe
-transposed_balance <- balance |>
-  # column_to_rownames(var = "eligible") |> # Use 'eligible' as row names
-  t() |> # Transpose the dataframe
-  as.data.frame() |>
-  rownames_to_column(var = "Variable")
+t2 <- svyby(
+  ~ age + educ + civilstatus + urb + log_jobincome + log_totalincome + hours,
+  ~ eligible,
+  design = intensive_design,
+  svymean
+)
 
-# Print the transposed dataframe to check
-print(transposed_balance)
-
-# Generate LaTeX table
-latex_table <- xtable(transposed_balance, caption = "Pre-treatment Characteristics", digits = c(0,2,2,2,2,2))
-
-# Print LaTeX table to console
-# print(latex_table, type = "latex", include.rownames = FALSE, caption.placement = "top")
+bind_rows(t1, t2)
 ```
 
 # Changes
 
+```{r include = FALSE}
+intensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_intensive, 
+  nest = TRUE
+)
+extensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_intensive, 
+  nest = TRUE
+)
+
+gen_diff_table <- function (surveydesign, outcomes) {
+  # Create an empty data frame to store the results
+  results <- data.frame(
+    year = numeric(),
+    var = character(),
+    treatment_mean = numeric(),
+    treatment_se = numeric(),
+    control_mean = numeric(),
+    control_se = numeric(),
+    difference = numeric(),
+    difference_se = numeric()
+  )
+  
+  # Loop over the years
+  for (outcome in outcomes) {
+    
+    print(outcome)
+    
+    for (y in unique(df_intensive$year)) {
+      # Filter the data for the current year
+      year_data <- subset(surveydesign, year == y)
+      
+      # Calculate the mean and standard error of log_jobincome for each group
+      treatment <- svymean(as.formula(paste0("~", outcome)),
+                                          subset(year_data, eligible == 1))
+      control <- svymean(as.formula(paste0("~", outcome)),
+                                        subset(year_data, eligible == 0))
+      
+      # Calculate the standard error
+      difference_se <- sqrt(SE(treatment)^2  + SE(control)^2)
+      
+      # Store the results for the current year
+      results <- bind_rows(
+        results,
+        data.frame(
+          year = y,
+          var = outcome,
+          treatment_mean = mean(treatment),
+          treatment_se = as.numeric(SE(treatment)),
+          control_mean = mean(control),
+          control_se = as.numeric(SE(control)),
+          difference = mean(treatment) - mean(control),
+          difference_se = as.numeric(difference_se)
+        )
+      )
+      
+    }
+  }
+  
+  return(results)
+}
+```
+
 ```{r}
-balance_ex <- df_extensive  |> 
-  filter(year %in% c(2006, 2011)) |> 
-  summarise(
-    `Employment` = mean(employment)*100, 
-    `Unemployment` = mean(employment)*100, 
-    Contract = mean(contract)*100,
-    Age = mean(age), 
-    prop_educ = list(prop.table(table(educ))*100),
-    prop_civilstatus = list(prop.table(table(civilstatus))*100),
-    # prop_region = list(prop.table(table(region))),
-    prop_urb = list(prop.table(table(urb))*100), 
-    .by = c(eligible, year)
-  ) |> 
-  arrange(eligible, year) |>
-  select(-year) |> 
-  unnest_wider(prop_educ, names_sep = "_") |>
-  unnest_wider(prop_civilstatus, names_sep = "_") |>
-  unnest_wider(prop_urb, names_sep = "_") 
+results_intensive <- gen_diff_table(intensive_design, c("log_jobincome", "log_totalincome", "log_hours"))
 
-balance_ex <- balance_ex |> 
-  mutate(
-    across(
-      .fns = ~ as.numeric(as.character(.x)),
-      .cols = everything()
-    )
-  )
+diff_table <- results_intensive |> 
+  pivot_wider(names_from = var, values_from = !c(year, var)) |> 
+  round(2) |> 
+  arrange(year)
 
-balance_ex <- bind_rows(
-  balance_ex[2, ] - balance_ex[1, ],
-  balance_ex[4, ] - balance_ex[3, ] 
-) |> 
-  mutate(Category = "Extensive", eligible = c(0, 1), .before = everything()) 
+diff_table_in <- xtable(diff_table, caption = "Simple Difference (Intensive Margin)", 
+                        label = "tab:diff-table")
+```
 
-  
-balance_in <- df_intensive  |> 
-  filter(year %in% c(2006, 2011)) |> 
-  summarise(
-    Contract = mean(contract)*100,
-    `Log of Job Income` = mean(log_jobincome), 
-    `Log of Total Income` = mean(log_totalincome), 
-    `Working Hours` = mean(log_hours), 
-    Age = mean(age), 
-    prop_educ = list(prop.table(table(educ))*100),
-    prop_civilstatus = list(prop.table(table(civilstatus))*100),
-    # prop_region = list(prop.table(table(region))),
-    prop_urb = list(prop.table(table(urb))*100), 
-    nob = n(),
-    .by = c(eligible, year)
-  ) |>
-  arrange(eligible, year) |>
-  select(-year) |> 
-  unnest_wider(col = c(prop_educ, prop_civilstatus, prop_urb), names_sep = "_") |> 
-  mutate(Category = "Intensive", .before = everything())
+```{r}
+extensive_design <- svydesign(
+  id = ~varunit, 
+  strata = ~varstrat, 
+  weights = ~expr, 
+  data = df_extensive, 
+  nest = TRUE,
+)
 
-balance_in <- balance_in |> 
-  mutate(
-    across(
-      .fns = ~ as.numeric(as.character(.x)),
-      .cols = everything()
-    )
-  )
+results_extensive <- gen_diff_table(extensive_design, c("lfp", "employment", "unemployment", "contract"))
 
-balance_in <- bind_rows(
-  balance_in[2, ] - balance_in[1, ],
-  balance_in[4, ] - balance_in[3, ]
-) |> 
-  mutate(Category = "Intensive", eligible = c(0, 1), .before = everything()) 
-  
+diff_table_ex <- results_extensive |> 
+  pivot_wider(names_from = var, values_from = !c(year, var)) |> 
+  round(2) |> 
+  arrange(year)
 
-balance <- bind_rows(balance_ex, balance_in) |> 
-  mutate(
-    eligible = if_else(eligible == 1, "Eligible", "Non-eligible") 
-  ) |> 
-  arrange(Category, eligible)
-
-# Transpose the combined_balance dataframe
-transposed_balance <- balance |>
-  # column_to_rownames(var = "eligible") |> # Use 'eligible' as row names
-  t() |> # Transpose the dataframe
-  as.data.frame() |>
-  rownames_to_column(var = "Variable")
-
-# Print the transposed dataframe to check
-print(transposed_balance)
-
-# Generate LaTeX table
-latex_table <- xtable(transposed_balance, caption = "Pre-treatment Characteristics", digits = c(0,2,2,2,2,2))
-
-# Print LaTeX table to console
-# print(latex_table, type = "latex", include.rownames = FALSE, caption.placement = "top")
+diff_table_ex <- xtable(diff_table_ex, caption = "Simple Comparison of Extensive Margins", 
+                        label = "tab:diff-table-extensive")
 ```
 
 
