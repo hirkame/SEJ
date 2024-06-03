@@ -22,9 +22,9 @@ run_ols_2 <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
   } else if (control == FALSE & hetero_edu == TRUE) {
     fml <- stats::as.formula(paste0(outcome, "~ eligible*period*educ"))
   } else if (control == TRUE & hetero_edu == FALSE) {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + age + I(age^2) + educ + civilstatus + region"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + educ + civilstatus + region"))
   } else {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + age + I(age^2) + civilstatus + region"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + civilstatus + region"))
   }
   
   mod <- survey::svyglm(fml, design = data)
