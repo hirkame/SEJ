@@ -64,27 +64,27 @@ ggsave("meanplot.png", meanplot, width = 10, height = 13)
 
 ```{r}
 # Intensive margin (no control)
-mod_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", F, F)
-mod_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", F, F)
-mod_hours <- functions$run_ols_2(intensive_design, "hours", F, F)
+mod_jobincome <- functions$run_ols(intensive_design, "log_jobincome", F, F)
+mod_totalincome <- functions$run_ols(intensive_design, "log_totalincome", F, F)
+mod_hours <- functions$run_ols(intensive_design, "hours", F, F)
 
 # Intensive margin (control)
-mod_jobincome_control <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
-mod_totalincome_control <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
-mod_hours_control <- functions$run_ols_2(intensive_design, "hours", T, F)
+mod_jobincome_control <- functions$run_ols(intensive_design, "log_jobincome", T, F)
+mod_totalincome_control <- functions$run_ols(intensive_design, "log_totalincome", T, F)
+mod_hours_control <- functions$run_ols(intensive_design, "hours", T, F)
 
 
 # Extensive margin (no control)
-mod_lfp <- functions$run_ols_2(extensive_design, "lfp", F, F)
-mod_employment <- functions$run_ols_2(extensive_design, "employment", F, F)
-mod_unemployment <- functions$run_ols_2(extensive_design, "unemployment", F, F)
-mod_contract <- functions$run_ols_2(extensive_design, "contract", F, F)
+mod_lfp <- functions$run_ols(extensive_design, "lfp", F, F)
+mod_employment <- functions$run_ols(extensive_design, "employment", F, F)
+mod_unemployment <- functions$run_ols(extensive_design, "unemployment", F, F)
+mod_contract <- functions$run_ols(extensive_design, "contract", F, F)
 
 # Extensive margin (control)
-mod_lfp_control <- functions$run_ols_2(extensive_design, "lfp", T, F)
-mod_employment_control <- functions$run_ols_2(extensive_design, "employment", T, F)
-mod_unemployment_control <- functions$run_ols_2(extensive_design, "unemployment", T, F)
-mod_contract_control <- functions$run_ols_2(extensive_design, "contract", T, F)
+mod_lfp_control <- functions$run_ols(extensive_design, "lfp", T, F)
+mod_employment_control <- functions$run_ols(extensive_design, "employment", T, F)
+mod_unemployment_control <- functions$run_ols(extensive_design, "unemployment", T, F)
+mod_contract_control <- functions$run_ols(extensive_design, "contract", T, F)
 ```
 
 
