@@ -101,12 +101,12 @@ df_intensive <- df_casen |>
   ) |> 
   mutate(
     across(
-      .cols = c(jobincome, totalincome, hours), 
+      .cols = c(jobincome, totalincome), 
       .fns = log,
       .names = "log_{.col}"
     )
   ) %>%
-  filter(hours > 0 & hours < 80 & !is.na(log_hours))
+  filter(hours > 0 & hours < 80)
 nrow(df_intensive)
 
 saveRDS(df_intensive, "data/df_intensive.rds")

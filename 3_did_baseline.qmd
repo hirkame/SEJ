@@ -1,11 +1,9 @@
 ```{r echo = FALSE, include=FALSE}
 library(tidyverse)
 library(survey)
+library(ggpubr)
+library(modelsummary)
 library(haven)
-library(gridExtra)
-library(broom)
-library(kableExtra)
-library(stargazer)
 
 here::i_am("3_did_baseline.qmd")
 options(box.path = here::here())
@@ -36,319 +34,108 @@ extensive_design <- svydesign(
 )
 ```
 
-# Intensive Margin
 
-## Job income (log)
-
-```{r}
-functions$plot_mean(df_intensive, "log_jobincome")
-```
-
+# Mean plots 
 
 ```{r}
-m1_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", F, F) 
-m2_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
-functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
-```
+# Intensive margin
+meanplot_jobincome <- functions$plot_mean(df_intensive, "log_jobincome", title = "Log Job Income") 
+meanplot_totalincome <- functions$plot_mean(df_intensive, "log_totalincome", title = "Log Total Income")
+meanplot_hours <- functions$plot_mean(df_intensive, "hours", title = "Working Hours")
 
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(intensive_design, "log_jobincome", T, T) -->
-<!-- ) -->
-<!-- ``` -->
+# Extensive margin 
+meanplot_lfp <- functions$plot_mean(df_extensive, "lfp", title = "Labor Force Participation")
+meanplot_employment <- functions$plot_mean(df_extensive, "employment", title = "Employment")
+meanplot_unemployment <- functions$plot_mean(df_extensive, "unemployment", title = "Unemployment")
+meanplot_contract <- functions$plot_mean(df_extensive, "contract", title = "Contract")
 
-
-
-## Total Income
-
-```{r}
-functions$plot_mean(df_intensive, "log_totalincome")
-```
-
-
-```{r}
-m1_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", F, F) 
-m2_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
-functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
-```
-
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(intensive_design, "log_totalincome", F, T) -->
-<!-- ) -->
-
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(intensive_design, "log_totalincome", T, T) -->
-<!-- ) -->
-<!-- ``` -->
-
-
-
-## Working hours
-
-```{r}
-functions$plot_mean(df_intensive, "log_hours")
-```
-
-```{r}
-m1_hours <- functions$run_ols_2(intensive_design, "log_hours", F, F) 
-m2_hours <- functions$run_ols_2(intensive_design, "log_hours", T, F)
-functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
-
-```
-
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(intensive_design, "log_hours", F, T) -->
-<!-- ) -->
-
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(intensive_design, "log_hours", T, T) -->
-<!-- ) -->
-<!-- ``` -->
-
-Combining Intensive Margin Figures 
-```{r}
-
-# Generate the individual plots
-plot1 <- functions$plot_mean(df_intensive, "log_jobincome")
-plot2 <- functions$plot_event_study(m2_jobincome, output_title = "Log Job Income Event Study with Controls")
-plot3 <- functions$plot_mean(df_intensive, "log_totalincome")
-plot4 <- functions$plot_event_study(m2_totalincome, output_title = "Log Total Income Event Study with Controls")
-plot5 <- functions$plot_mean(df_intensive, "log_hours")
-plot6 <- functions$plot_event_study(m2_hours, output_title = "Log Working Hours Event Study with Controls")
-
-# Arrange the plots into a 2x3 grid
-intensive_means_plot_combined <- grid.arrange(plot1, plot3, plot5, ncol = 3, nrow = 1)
-intensive_event_plot_combined <- grid.arrange(plot2, plot4, plot6, ncol = 3, nrow = 1)
+# Arrange the plots into a 2x4 grid
+meanplot <- ggarrange(
+  meanplot_jobincome, meanplot_totalincome, meanplot_hours, 
+  meanplot_lfp, meanplot_employment, meanplot_unemployment, meanplot_contract,
+  ncol=2, nrow=4, common.legend = TRUE, legend="bottom"
+) 
 
 # Export the combined figure to a file
-ggsave("intensive_means_plot_combined.png", intensive_means_plot_combined, width = 18, height = 12)
-
-ggsave("intensive_event_plot_combined.png", intensive_event_plot_combined, width = 18, height = 12)
-
+ggsave("meanplot.png", meanplot, width = 10, height = 13)
 ```
 
-# Extensive Margin
-
-## Labor force participation
+# Models
 
 ```{r}
-functions$plot_mean(df_extensive, "lfp")
-```
+# Intensive margin (no control)
+mod_jobincome <- functions$run_ols(intensive_design, "log_jobincome", F, F)
+mod_totalincome <- functions$run_ols(intensive_design, "log_totalincome", F, F)
+mod_hours <- functions$run_ols(intensive_design, "hours", F, F)
 
-```{r}
-m1_lfp <- functions$run_ols_2(extensive_design, "lfp", F, F) 
-m2_lfp <- functions$run_ols_2(extensive_design, "lfp", T, F)
-functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
-```
-
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "lfp", F, T) -->
-<!-- ) -->
-
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "lfp", T, T) -->
-<!-- ) -->
-<!-- ``` -->
+# Intensive margin (control)
+mod_jobincome_control <- functions$run_ols(intensive_design, "log_jobincome", T, F)
+mod_totalincome_control <- functions$run_ols(intensive_design, "log_totalincome", T, F)
+mod_hours_control <- functions$run_ols(intensive_design, "hours", T, F)
 
 
+# Extensive margin (no control)
+mod_lfp <- functions$run_ols(extensive_design, "lfp", F, F)
+mod_employment <- functions$run_ols(extensive_design, "employment", F, F)
+mod_unemployment <- functions$run_ols(extensive_design, "unemployment", F, F)
+mod_contract <- functions$run_ols(extensive_design, "contract", F, F)
 
-## Employment
-
-```{r}
-functions$plot_mean(df_extensive, "employment")
-```
-
-```{r}
-m1_employment <- functions$run_ols_2(extensive_design, "employment", F, F) 
-m2_employment <- functions$run_ols_2(extensive_design, "employment", T, F)
-functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
-```
-
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "employment", F, T) -->
-<!-- ) -->
-
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "employment", T, T) -->
-<!-- ) -->
-<!-- ``` -->
-
-
-
-## Unemployment
-
-```{r}
-functions$plot_mean(df_extensive, "unemployment")
-```
-
-```{r}
-m1_unemployment <- functions$run_ols_2(extensive_design, "unemployment", F, F) 
-m2_unemployment <- functions$run_ols_2(extensive_design, "unemployment", T, F)
-functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
-```
-
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "unemployment", F, T) -->
-<!-- ) -->
-
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "unemployment", T, T) -->
-<!-- ) -->
-<!-- ``` -->
-
-
-
-## Contract
-
-```{r}
-functions$plot_mean(df_extensive, "contract")
+# Extensive margin (control)
+mod_lfp_control <- functions$run_ols(extensive_design, "lfp", T, F)
+mod_employment_control <- functions$run_ols(extensive_design, "employment", T, F)
+mod_unemployment_control <- functions$run_ols(extensive_design, "unemployment", T, F)
+mod_contract_control <- functions$run_ols(extensive_design, "contract", T, F)
 ```
 
 
 ```{r}
-m1_contract <- functions$run_ols_2(extensive_design, "contract", F, F) 
-m2_contract <- functions$run_ols_2(extensive_design, "contract", T, F)
-functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
+regtable_intensive <- modelsummary(
+  list(
+    mod_jobincome, mod_jobincome_control,
+    mod_totalincome, mod_totalincome_control,
+    mod_hours, mod_hours_control
+  ),
+  coef_omit = "^(?!eligible:period)",
+  gof_map = c("nobs", "r.squared"),
+  output = "latex",
+  stars = TRUE
+)
+
+regtable_extensive <- modelsummary(
+  list(
+    mod_lfp, mod_lfp_control,
+    mod_employment, mod_employment_control,
+    mod_unemployment, mod_unemployment_control, 
+    mod_contract, mod_contract_control
+  ),
+  coef_omit = "^(?!eligible:period)",
+  gof_map = c("nobs", "r.squared"),
+  output = "latex",
+  stars = TRUE
+)
 ```
 
-<!-- ```{r} -->
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "contract", F, T) -->
-<!-- ) -->
-
-<!-- functions$plot_event_study_educ( -->
-<!--   functions$run_ols(extensive_design, "contract", T, T) -->
-<!-- ) -->
-<!-- ``` -->
-
-Combined Extensive Margin Figures
-```{r}
-
-plot7 <- functions$plot_mean(df_extensive, "lfp")
-plot8 <- functions$plot_event_study(m2_lfp, output_title = "Labor Force Participation Event Study with Controls")
-plot9 <- functions$plot_mean(df_extensive, "employment")
-plot10 <- functions$plot_event_study(m2_employment, output_title = "Employment Event Study with Controls")
-plot11 <- functions$plot_mean(df_extensive, "unemployment")
-plot12 <- functions$plot_event_study(m2_unemployment, output_title = "Unemployment Event Study with Controls")
-plot13 <- functions$plot_mean(df_extensive, "contract")
-plot14 <- functions$plot_event_study(m2_contract, output_title = "Contract Event Study with Controls")
-
-# Arrange the plots into a 2x3 grid
-extensive_means_plot_combined <- grid.arrange(plot7, plot9, plot11, plot13, ncol = 4, nrow = 1)
-extensive_event_plot_combined <- grid.arrange(plot8, plot10, plot12, plot14, ncol = 4, nrow = 1)
-
-# Export the combined figure to a file
-ggsave("extensive_means_plot_combined.png", extensive_means_plot_combined, width = 18, height = 12)
-
-ggsave("extensive_event_plot_combined.png", extensive_event_plot_combined, width = 18, height = 12)
-
-```
-
+# Event study plot (with controls)
 
 ```{r}
+# Intensive
+eventstudyplot_jobincome <- functions$plot_event_study(mod_jobincome_control, output_title = "Log Job Income")
+eventstudyplot_totalincome <- functions$plot_event_study(mod_totalincome_control, output_title = "Log Total Income")
+eventstudyplot_hours <- functions$plot_event_study(mod_hours_control, output_title = "Working Hours")
 
-# Function to run models and extract coefficients and SEs
-#run_and_extract <- function(data, outcome, control) {
- # model <- functions$run_ols_2(data, outcome, control, hetero_edu = FALSE)
-  #tidy_model <- broom::tidy(model, conf.int = TRUE) %>%
-   # filter(str_detect(term, "eligible:period")) %>%
-    #select(term, estimate, std.error, p.value) %>%
-    #mutate(n_obs = stats::nobs(model),
-     #      control = ifelse(control, "(2)", "(1)"),
-      #     outcome = outcome,
-       #    estimate_with_stars = case_when(
-        #     p.value < 0.01 ~ paste0(round(estimate, 3), "***"),
-         #    p.value < 0.05 ~ paste0(round(estimate, 3), "**"),
-          #   p.value < 0.1 ~ paste0(round(estimate, 3), "*"),
-           #  TRUE ~ as.character(round(estimate, 3))
-           #))
+# Extensive  
+eventstudyplot_lfp <- functions$plot_event_study(mod_lfp_control, output_title = "Labor Force Participation")
+eventstudyplot_employment <- functions$plot_event_study(mod_employment_control, output_title = "Employment")
+eventstudyplot_unemployment <- functions$plot_event_study(mod_unemployment_control, output_title = "Unemployment")
+eventstudyplot_contract <- functions$plot_event_study(mod_contract_control, output_title = "Contract")
 
-  #print(tidy_model) # Debugging output to check the intermediate results
-  #return(tidy_model)
-#}
+# Plot
+eventstudyplot <- ggarrange(
+  eventstudyplot_jobincome, eventstudyplot_totalincome, eventstudyplot_hours, 
+  eventstudyplot_lfp, eventstudyplot_employment, eventstudyplot_unemployment, eventstudyplot_contract, 
+  ncol=2, nrow=4
+) 
 
-# List of outcomes
-#outcomes <- c("lfp", "employment", "unemployment", "contract")
-
-# Run models and extract results for both control settings
-#results <- lapply(outcomes, function(outcome) {
- # rbind(run_and_extract(extensive_design, outcome, control = FALSE),
-  #      run_and_extract(extensive_design, outcome, control = TRUE))
-#}) %>% bind_rows()
-
-#print(results) # Debugging output to check combined results
-
-#results_table <- results %>%
- # pivot_wider(names_from = control, values_from = c(estimate, std.error)) %>%
-  #arrange(outcome, term) %>%
-  #mutate(term = recode(term, 
-   #                    "eligible:period2009" = "2009", 
-    #                   "eligible:period2011" = "2011",
-     #                  "eligible:period2013" = "2013",
-      #                 "eligible:period2015" = "2015",
-       #                "eligible:period2017" = "2017")) %>%
-  #rename(Year = term, Outcome = outcome)
-
-#print(results_table) # Debugging output to check the pivoted and arranged table
-
-# Determine the number of observations and whether controls were used
-#num_observations <- as.character(unique(results$n_obs)[1])  # Convert to character
-
-# Convert controls_used and num_observations into a data frame
-#controls_df <- data.frame(Year = "", Outcome = "Controls", estimate_1 = "YES", std.error_1 = "", estimate_2 = "NO", std.error_2 = "")
-#num_obs_df <- data.frame(Year = "", Outcome = "N", estimate_1 = num_observations, std.error_1 = "", estimate_2 = num_observations, std.error_2 = "")
-
-# Bind the controls and number of observations data frames to the results table
-#results_table <- bind_rows(results_table, controls_df, num_obs_df)
-
-#results_table_wide <- results_table %>%
- # pivot_wider(names_from = control, values_from = c(estimate, std.error, estimate_with_stars)) %>%
-  #arrange(outcome, term) %>%
-  #mutate(term = recode(term, 
-   #                    "eligible:period-6" = "Period -6", 
-    #                   "eligible:period-4" = "Period -4",
-     #                  "eligible:period-2" = "Period -2",
-      #                 "eligible:period0" = "Period 0",
-       #                "eligible:period2" = "Period 2",
-        #               "eligible:period4" = "Period 4",
-         #              "eligible:period6" = "Period 6",
-          #             "eligible:period8" = "Period 8",
-           #            "eligible:period9" = "Period 9")) %>%
-#  rename(Year = term, Outcome = outcome)
-
-#results_table_final <- results_table_wide %>%
- # mutate(est_se_1 = ifelse(!is.na(estimate_1), 
-  #                         paste0(estimate_with_stars_1, " (", round(std.error_1, 3), ")"), NA),
-   #      est_se_2 = ifelse(!is.na(estimate_2), 
-    #                       paste0(estimate_with_stars_2, " (", round(std.error_2, 3), ")"), NA))
-
-# Add controls and number of observations information
-#num_observations <- as.character(unique(results_table$n_obs)[1])  # Convert to character
-#controls_df <- data.frame(Year = "", Outcome = "Controls", estimate_1 = "YES", std.error_1 = "", estimate_2 = "NO", std.error_2 = "")
-#num_obs_df <- data.frame(Year = "", Outcome = "N", estimate_1 = num_observations, std.error_1 = "", estimate_2 = num_observations, std.error_2 = "")
-
-# Bind the controls and number of observations data frames to the results table
-#results_table_final <- bind_rows(results_table_final, controls_df, num_obs_df)
-
-# Select and rename necessary columns for final table
-#final_table <- results_table_final %>%
- # select(Year, Outcome, est_se_1, est_se_2) %>%
-  #rename(`Control 1` = est_se_1, `Control 2` = est_se_2)
-
-# Create and format the HTML table using kableExtra
-#html_table <- final_table %>%
- # kable("html", booktabs = TRUE, caption = "DID Estimates") %>%
-  #kable_styling(full_width = FALSE, position = "left", latex_options = c("striped", "hold_position")) %>%
-  #add_header_above(c(" " = 2, "Control 1" = 1, "Control 2" = 1))
-
-# Print the HTML table to see the output
-#print(html_table)
-
-
-
+ggsave("eventstudyplot.png", eventstudyplot, width = 8, height = 12)
 ```
+

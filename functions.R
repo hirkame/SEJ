@@ -5,9 +5,9 @@ run_ols <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
   } else if (control == FALSE & hetero_edu == TRUE) {
     fml <- stats::as.formula(paste0(outcome, "~ eligible*period*educ"))
   } else if (control == TRUE & hetero_edu == FALSE) {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + age + I(age^2) + educ + civilstatus + region + urb"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + educ + civilstatus + region + urb"))
   } else {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + age + I(age^2) + civilstatus + region + urb"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + civilstatus + region + urb"))
   }
   
   mod <- survey::svyglm(fml, design = data)
@@ -22,9 +22,9 @@ run_ols_2 <- function(data, outcome, control = FALSE, hetero_edu = FALSE) {
   } else if (control == FALSE & hetero_edu == TRUE) {
     fml <- stats::as.formula(paste0(outcome, "~ eligible*period*educ"))
   } else if (control == TRUE & hetero_edu == FALSE) {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + age + I(age^2) + educ + civilstatus + region"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period + experience + I(experience^2) + educ + civilstatus + region"))
   } else {
-    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + age + I(age^2) + civilstatus + region"))
+    fml <- stats::as.formula(paste0(outcome, " ~ eligible*period*educ + experience + I(experience^2) + civilstatus + region"))
   }
   
   mod <- survey::svyglm(fml, design = data)
@@ -60,7 +60,7 @@ plot_event_study <- function(mod, output_title = "Event Study") {
     ggplot2::geom_point() +
     ggplot2::labs(x = "Year", y = "Coefficient", title = output_title) + 
     ggplot2::scale_x_continuous(breaks = breaks, labels = labels) +
-    ggplot2::theme_bw()
+    ggplot2::theme_bw() 
   
   return(g)
 }
@@ -105,59 +105,8 @@ plot_event_study_educ <- function(mod) {
   
 }
 
-#' #' @export
-#' run_feols <- function(data, outcome, control = TRUE) {
-#'   if (control == FALSE) {
-#'     mod <- feols(
-#'       stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + eligible:lineartrend | period")), 
-#'       data, 
-#'       # weights = data$expr,
-#'       "iid"
-#'     )
-#'   } else {
-#'     mod <- feols(
-#'       stats::as.formula(paste0(outcome, " ~ eligible + i(period, eligible, 0) + schooling + I(schooling^2) + civilstatus + region*urb | period")),
-#'       data,
-#'       # weights = data$expr,
-#'       vcov = "cluster"
-#'     )
-#'   }
-#'   
-#'   return(mod)
-#' }
-
-#' #' @export
-#' run_cs <- function(data, outcome, xfm = NULL, est_method = "ipw") {
-#'   if (is.null(xfm)) {
-#'     mod <- did::att_gt(
-#'       yname = outcome, 
-#'       tname = "year", 
-#'       gname = "gname", 
-#'       data = data,
-#'       panel = FALSE, 
-#'       # weightsname = "expr", 
-#'       base_period = "universal", 
-#'       est_method = est_method
-#'     )
-#'   } else {
-#'     mod <- did::att_gt(
-#'       yname = outcome, 
-#'       tname = "year", 
-#'       xformla = stats::as.formula(xfm),
-#'       gname = "gname", 
-#'       data = data,
-#'       panel = FALSE, 
-#'       # weightsname = "expr", 
-#'       base_period = "universal", 
-#'       est_method = est_method
-#'     )
-#'   }
-#'   
-#'   return(mod)
-#' }
-
 #' @export
-plot_mean <- function(data, outcome) {
+plot_mean <- function(data, outcome, title) {
   data <- data |> 
     dplyr::summarize(
       mean = mean(!!rlang::sym(outcome), na.rm = TRUE),
@@ -168,6 +117,7 @@ plot_mean <- function(data, outcome) {
     periods + 2009
   }
   breaks <- seq(min(data$period), max(data$period), by = 2)
+  
   g <- ggplot2::ggplot(data, ggplot2::aes(x = period, y = mean, group = eligible, colour = eligible)) +
     ggplot2::geom_vline(xintercept = -3, linetype = "dashed", colour = 1) +
     ggplot2::geom_point() +
@@ -176,8 +126,9 @@ plot_mean <- function(data, outcome) {
       breaks = breaks,
       labels = label_years(breaks)
     ) +
-    ggplot2::labs(x = "Year", y = paste0("Mean ", outcome), title = paste0(outcome)) 
-    ggplot2::theme_bw()
+    ggplot2::labs(x = "Year", y = "Mean", colour = "Group", title = title) + 
+    ggplot2::theme_bw() + 
+    ggplot2::scale_color_discrete(labels = c("Control", "Treatment"))
   
   return(g)
   }
