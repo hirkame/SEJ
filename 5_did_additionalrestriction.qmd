@@ -1,13 +1,9 @@
 ```{r echo = FALSE, include=FALSE}
 library(tidyverse)
 library(survey)
+library(ggpubr)
+library(modelsummary)
 library(haven)
-library(gridExtra)
-
-#rm(df_intensive)
-#rm(df_extensive) 
-#rm(intensive_design)
-#rm(extensive_design)
 
 here::i_am("5_did_additionalrestriction.qmd")
 options(box.path = here::here())
@@ -18,6 +14,7 @@ options(survey.lonely.psu="adjust")
 df_intensive <- readRDS("data/df_intensive.rds")
 df_extensive <- readRDS("data/df_extensive.rds")
 ```
+
 
 # Additional sample restriction
 
@@ -53,213 +50,110 @@ extensive_design <- svydesign(
 )
 ```
 
-# Intensive Margin
-
-## Job income (log)
+# Mean plots 
 
 ```{r}
-functions$plot_mean(df_intensive, "log_jobincome")
-```
+# Intensive margin
+meanplot_jobincome <- functions$plot_mean(df_intensive, "log_jobincome", title = "Log Job Income") 
+meanplot_totalincome <- functions$plot_mean(df_intensive, "log_totalincome", title = "Log Total Income")
+meanplot_hours <- functions$plot_mean(df_intensive, "hours", title = "Working Hours")
 
+# Extensive margin 
+meanplot_lfp <- functions$plot_mean(df_extensive, "lfp", title = "Labor Force Participation")
+meanplot_employment <- functions$plot_mean(df_extensive, "employment", title = "Employment")
+meanplot_unemployment <- functions$plot_mean(df_extensive, "unemployment", title = "Unemployment")
+meanplot_contract <- functions$plot_mean(df_extensive, "contract", title = "Contract")
 
-```{r}
-m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
-functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
-```
-
-
-## Total Income
-
-```{r}
-functions$plot_mean(df_intensive, "log_totalincome")
-```
-
-
-```{r}
-
-m2 <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
-functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
-
-
-```
-
-
-
-## Working hours
-
-```{r}
-functions$plot_mean(df_intensive, "log_hours")
-```
-
-```{r}
-m2 <- functions$run_ols_2(intensive_design, "log_hours", T, F)
-functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
-```
-
-Combining Intensive Margin Figures 
-```{r}
-
-# Generate the individual plots
-plot1 <- functions$plot_mean(df_intensive, "log_jobincome")
-plot2 <- functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
-plot3 <- functions$plot_mean(df_intensive, "log_totalincome")
-plot4 <- functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
-plot5 <- functions$plot_mean(df_intensive, "log_hours")
-plot6 <- functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
-
-# Arrange the plots into a 2x3 grid
-combined_plot <- grid.arrange(plot1, plot2, plot3, plot4, plot5, plot6, ncol = 2, nrow = 3)
+# Arrange the plots into a 2x4 grid
+meanplot <- ggarrange(
+  meanplot_jobincome, meanplot_totalincome, meanplot_hours, 
+  meanplot_lfp, meanplot_employment, meanplot_unemployment, meanplot_contract,
+  ncol=2, nrow=4, common.legend = TRUE, legend="bottom"
+) 
 
 # Export the combined figure to a file
-ggsave("combined_plot.png", combined_plot, width = 18, height = 12)
-
-
+ggsave("meanplot_restricted.png", meanplot, width = 10, height = 13)
 ```
 
-Extracting Coefficients & SEs from event studies
-```{r}
-
-# Generate the models (assuming you have different models for each plot)
-m2_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
-m2_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
-m2_hours <- functions$run_ols_2(intensive_design, "log_hours", T, F)
-
-# Function to extract tidy model results along with number of observations
-extract_model_info <- function(model) {
-  tidy_model <- broom::tidy(model, conf.int = TRUE) %>%
-    filter(str_detect(term, "eligible:period")) %>%
-    select(term, estimate, std.error, p.value)
-  
-  n_obs <- stats::nobs(model)
-  
-  tidy_model <- tidy_model %>%
-    mutate(n_obs = n_obs)
-  
-  return(tidy_model)
-}
-
-# Extract coefficients, standard errors, p-values, and number of observations for each model
-tidy_m2_jobincome <- extract_model_info(m2_jobincome)
-tidy_m2_totalincome <- extract_model_info(m2_totalincome)
-tidy_m2_hours <- extract_model_info(m2_hours)
-
-# Display the results
-tidy_m2_jobincome
-tidy_m2_totalincome
-tidy_m2_hours
-
-
-
-```
-
-
-# Extensive Margin
-
-## Labor force participation
+# Models
 
 ```{r}
-functions$plot_mean(df_extensive, "lfp")
-```
+# Intensive margin (no control)
+mod_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", F, F)
+mod_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", F, F)
+mod_hours <- functions$run_ols_2(intensive_design, "hours", F, F)
 
-```{r}
-m2 <- functions$run_ols_2(extensive_design, "lfp", T, F)
-functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
-
-```
-
-
-
-## Employment
-
-```{r}
-functions$plot_mean(df_extensive, "employment")
-```
-
-```{r}
-m2 <- functions$run_ols_2(extensive_design, "employment", T, F)
-functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
-```
+# Intensive margin (control)
+mod_jobincome_control <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
+mod_totalincome_control <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
+mod_hours_control <- functions$run_ols_2(intensive_design, "hours", T, F)
 
 
-## Unemployment
+# Extensive margin (no control)
+mod_lfp <- functions$run_ols_2(extensive_design, "lfp", F, F)
+mod_employment <- functions$run_ols_2(extensive_design, "employment", F, F)
+mod_unemployment <- functions$run_ols_2(extensive_design, "unemployment", F, F)
+mod_contract <- functions$run_ols_2(extensive_design, "contract", F, F)
 
-```{r}
-functions$plot_mean(df_extensive, "unemployment")
-```
-
-```{r}
-m2 <- functions$run_ols_2(extensive_design, "unemployment", T, F)
-functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
-```
-
-
-## Contract
-
-```{r}
-functions$plot_mean(df_extensive, "contract")
+# Extensive margin (control)
+mod_lfp_control <- functions$run_ols_2(extensive_design, "lfp", T, F)
+mod_employment_control <- functions$run_ols_2(extensive_design, "employment", T, F)
+mod_unemployment_control <- functions$run_ols_2(extensive_design, "unemployment", T, F)
+mod_contract_control <- functions$run_ols_2(extensive_design, "contract", T, F)
 ```
 
 
 ```{r}
-m2 <- functions$run_ols_2(extensive_design, "contract", T, F)
-functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
+regtable_intensive <- modelsummary(
+  list(
+    mod_jobincome, mod_jobincome_control,
+    mod_totalincome, mod_totalincome_control,
+    mod_hours, mod_hours_control
+  ),
+  coef_omit = "^(?!eligible:period)",
+  gof_map = c("nobs", "r.squared"),
+  output = "latex",
+  stars = TRUE
+)
+
+regtable_extensive <- modelsummary(
+  list(
+    mod_lfp, mod_lfp_control,
+    mod_employment, mod_employment_control,
+    mod_unemployment, mod_unemployment_control, 
+    mod_contract, mod_contract_control
+  ),
+  coef_omit = "^(?!eligible:period)",
+  gof_map = c("nobs", "r.squared"),
+  output = "latex",
+  stars = TRUE
+)
 ```
 
-Combined Extensive Margin Figures
+# Event study plot (with controls)
+
 ```{r}
+# Intensive
+eventstudyplot_jobincome <- functions$plot_event_study(mod_jobincome_control, output_title = "Log Job Income")
+eventstudyplot_totalincome <- functions$plot_event_study(mod_totalincome_control, output_title = "Log Total Income")
+eventstudyplot_hours <- functions$plot_event_study(mod_hours_control, output_title = "Working Hours")
 
-plot7 <- functions$plot_mean(df_extensive, "lfp")
-plot8 <- functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
-plot9 <- functions$plot_mean(df_extensive, "employment")
-plot10 <- functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
-plot11 <- functions$plot_mean(df_extensive, "unemployment")
-plot12 <- functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
-plot13 <- functions$plot_mean(df_extensive, "contract")
-plot14 <- functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
+# Extensive  
+eventstudyplot_lfp <- functions$plot_event_study(mod_lfp_control, output_title = "Labor Force Participation")
+eventstudyplot_employment <- functions$plot_event_study(mod_employment_control, output_title = "Employment")
+eventstudyplot_unemployment <- functions$plot_event_study(mod_unemployment_control, output_title = "Unemployment")
+eventstudyplot_contract <- functions$plot_event_study(mod_contract_control, output_title = "Contract")
 
+# Plot
+eventstudyplot <- ggarrange(
+  eventstudyplot_jobincome, eventstudyplot_totalincome, eventstudyplot_hours, 
+  eventstudyplot_lfp, eventstudyplot_employment, eventstudyplot_unemployment, eventstudyplot_contract, 
+  ncol=2, nrow=4
+) 
 
-combined_plot2 <- grid.arrange(plot7, plot8, plot9, plot10, plot11, plot12, plot13, plot14, ncol = 2, nrow = 4)
-
-# Export the combined figure to a file
-ggsave("combined_plot2.png", combined_plot2, width = 18, height = 12)
+ggsave("eventstudyplot_restricted.png", eventstudyplot, width = 8, height = 12)
 ```
 
 
-Extracting coefficients and SEs from event studies 
-```{r}
-
-m2_lfp <- functions$run_ols_2(extensive_design, "lfp", T, F)
-m2_employment <- functions$run_ols_2(extensive_design, "employment", T, F)
-m2_unemployment <- functions$run_ols_2(extensive_design, "unemployment", T, F)
-m2_contract <- functions$run_ols_2(extensive_design, "contract", T, F)
-
-# Function to extract tidy model results along with number of observations
-extract_model_info2 <- function(model) {
-  tidy_model <- broom::tidy(model, conf.int = TRUE) %>%
-    filter(str_detect(term, "eligible:period")) %>%
-    select(term, estimate, std.error, p.value)
-  
-  n_obs <- stats::nobs(model)
-  
-  tidy_model <- tidy_model %>%
-    mutate(n_obs = n_obs)
-  
-  return(tidy_model)
-}
-
-# Extract coefficients, standard errors, p-values, and number of observations for each model
-tidy_m2_lfp <- extract_model_info2(m2_lfp)
-tidy_m2_employment <- extract_model_info2(m2_employment)
-tidy_m2_unemployment <- extract_model_info2(m2_unemployment)
-tidy_m2_contract <- extract_model_info2(m2_contract)
-
-# Display the results
-tidy_m2_lfp
-tidy_m2_employment
-tidy_m2_unemployment
-tidy_m2_contract
-
-
-```
 
 
