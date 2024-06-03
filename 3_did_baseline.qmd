@@ -46,8 +46,8 @@ functions$plot_mean(df_intensive, "log_jobincome")
 
 
 ```{r}
-m1 <- functions$run_ols_2(intensive_design, "log_jobincome", F, F) 
-m2 <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
+m1_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", F, F) 
+m2_jobincome <- functions$run_ols_2(intensive_design, "log_jobincome", T, F)
 functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
 ```
 
@@ -67,8 +67,8 @@ functions$plot_mean(df_intensive, "log_totalincome")
 
 
 ```{r}
-m1 <- functions$run_ols_2(intensive_design, "log_totalincome", F, F) 
-m2 <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
+m1_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", F, F) 
+m2_totalincome <- functions$run_ols_2(intensive_design, "log_totalincome", T, F)
 functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
 ```
 
@@ -91,8 +91,8 @@ functions$plot_mean(df_intensive, "log_hours")
 ```
 
 ```{r}
-m1 <- functions$run_ols_2(intensive_design, "log_hours", F, F) 
-m2 <- functions$run_ols_2(intensive_design, "log_hours", T, F)
+m1_hours <- functions$run_ols_2(intensive_design, "log_hours", F, F) 
+m2_hours <- functions$run_ols_2(intensive_design, "log_hours", T, F)
 functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
 
 ```
@@ -112,11 +112,11 @@ Combining Intensive Margin Figures
 
 # Generate the individual plots
 plot1 <- functions$plot_mean(df_intensive, "log_jobincome")
-plot2 <- functions$plot_event_study(m2, output_title = "Log Job Income Event Study with Controls")
+plot2 <- functions$plot_event_study(m2_jobincome, output_title = "Log Job Income Event Study with Controls")
 plot3 <- functions$plot_mean(df_intensive, "log_totalincome")
-plot4 <- functions$plot_event_study(m2, output_title = "Log Total Income Event Study with Controls")
+plot4 <- functions$plot_event_study(m2_totalincome, output_title = "Log Total Income Event Study with Controls")
 plot5 <- functions$plot_mean(df_intensive, "log_hours")
-plot6 <- functions$plot_event_study(m2, output_title = "Log Working Hours Event Study with Controls")
+plot6 <- functions$plot_event_study(m2_hours, output_title = "Log Working Hours Event Study with Controls")
 
 # Arrange the plots into a 2x3 grid
 combined_plot <- grid.arrange(plot1, plot2, plot3, plot4, plot5, plot6, ncol = 2, nrow = 3)
@@ -136,8 +136,8 @@ functions$plot_mean(df_extensive, "lfp")
 ```
 
 ```{r}
-m1 <- functions$run_ols_2(extensive_design, "lfp", F, F) 
-m2 <- functions$run_ols_2(extensive_design, "lfp", T, F)
+m1_lfp <- functions$run_ols_2(extensive_design, "lfp", F, F) 
+m2_lfp <- functions$run_ols_2(extensive_design, "lfp", T, F)
 functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
 ```
 
@@ -160,8 +160,8 @@ functions$plot_mean(df_extensive, "employment")
 ```
 
 ```{r}
-m1 <- functions$run_ols_2(extensive_design, "employment", F, F) 
-m2 <- functions$run_ols_2(extensive_design, "employment", T, F)
+m1_employment <- functions$run_ols_2(extensive_design, "employment", F, F) 
+m2_employment <- functions$run_ols_2(extensive_design, "employment", T, F)
 functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
 ```
 
@@ -184,8 +184,8 @@ functions$plot_mean(df_extensive, "unemployment")
 ```
 
 ```{r}
-m1 <- functions$run_ols_2(extensive_design, "unemployment", F, F) 
-m2 <- functions$run_ols_2(extensive_design, "unemployment", T, F)
+m1_unemployment <- functions$run_ols_2(extensive_design, "unemployment", F, F) 
+m2_unemployment <- functions$run_ols_2(extensive_design, "unemployment", T, F)
 functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
 ```
 
@@ -209,8 +209,8 @@ functions$plot_mean(df_extensive, "contract")
 
 
 ```{r}
-m1 <- functions$run_ols_2(extensive_design, "contract", F, F) 
-m2 <- functions$run_ols_2(extensive_design, "contract", T, F)
+m1_contract <- functions$run_ols_2(extensive_design, "contract", F, F) 
+m2_contract <- functions$run_ols_2(extensive_design, "contract", T, F)
 functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
 ```
 
@@ -228,13 +228,13 @@ Combined Extensive Margin Figures
 ```{r}
 
 plot7 <- functions$plot_mean(df_extensive, "lfp")
-plot8 <- functions$plot_event_study(m2, output_title = "Labor Force Participation Event Study with Controls")
+plot8 <- functions$plot_event_study(m2_lfp, output_title = "Labor Force Participation Event Study with Controls")
 plot9 <- functions$plot_mean(df_extensive, "employment")
-plot10 <- functions$plot_event_study(m2, output_title = "Employment Event Study with Controls")
+plot10 <- functions$plot_event_study(m2_employment, output_title = "Employment Event Study with Controls")
 plot11 <- functions$plot_mean(df_extensive, "unemployment")
-plot12 <- functions$plot_event_study(m2, output_title = "Unemployment Event Study with Controls")
+plot12 <- functions$plot_event_study(m2_unemployment, output_title = "Unemployment Event Study with Controls")
 plot13 <- functions$plot_mean(df_extensive, "contract")
-plot14 <- functions$plot_event_study(m2, output_title = "Contract Event Study with Controls")
+plot14 <- functions$plot_event_study(m2_contract, output_title = "Contract Event Study with Controls")
 
 
 combined_plot2 <- grid.arrange(plot7, plot8, plot9, plot10, plot11, plot12, plot13, plot14, ncol = 2, nrow = 4)
@@ -242,139 +242,6 @@ combined_plot2 <- grid.arrange(plot7, plot8, plot9, plot10, plot11, plot12, plot
 # Export the combined figure to a file
 ggsave("combined_plot_extensive.png", combined_plot2, width = 18, height = 12)
 ```
-
-
-Extracting coefficients and SEs from event studies 
-```{r}
-
-add_significance_stars <- function(coef, se) {
-  p_value <- 2 * (1 - pnorm(abs(coef / se), na.rm = TRUE))
-  if (is.na(p_value)) {
-    return("")
-  } else if (p_value < 0.01) {
-    return(paste0(round(coef, 3), "***"))
-  } else if (p_value < 0.05) {
-    return(paste0(round(coef, 3), "**"))
-  } else if (p_value < 0.1) {
-    return(paste0(round(coef, 3), "*"))
-  } else {
-    return(round(coef, 3))
-  }
-}
-
-
-# Define the extraction function
-extract_event_study_coefs <- function(model) {
-  df_model <- broom::tidy(model, conf.int = TRUE) |>
-    dplyr::filter(stringr::str_detect(term, "eligible:period")) |>
-    dplyr::mutate(period = stringr::str_replace(term, "eligible:period", "") |> as.numeric()) |>
-    dplyr::add_row(term = "eligible:period-3", period = -3, estimate = 0, std.error = 0)
-  
-  df_coefs <- df_model |>
-    dplyr::select(term, period, estimate, std.error) |>
-    dplyr::rename(Coefficient = estimate, StdError = std.error)
-  
-  return(df_coefs)
-}
-
-# Extract coefficients and standard errors for models with controls
-coefs_lfp <- extract_event_study_coefs(m2)
-coefs_lfp$Outcome <- "Labor Force Participation with Controls"
-
-coefs_employment <- extract_event_study_coefs(m2)
-coefs_employment$Outcome <- "Employment with Controls"
-
-coefs_unemployment <- extract_event_study_coefs(m2)
-coefs_unemployment$Outcome <- "Unemployment with Controls"
-
-coefs_contract <- extract_event_study_coefs(m2)
-coefs_contract$Outcome <- "Contract with Controls"
-
-# Extract coefficients and standard errors for models without controls
-coefs_lfp_no_ctrl <- extract_event_study_coefs(m1)
-coefs_lfp_no_ctrl$Outcome <- "Labor Force Participation without Controls"
-
-coefs_employment_no_ctrl <- extract_event_study_coefs(m1)
-coefs_employment_no_ctrl$Outcome <- "Employment without Controls"
-
-coefs_unemployment_no_ctrl <- extract_event_study_coefs(m1)
-coefs_unemployment_no_ctrl$Outcome <- "Unemployment without Controls"
-
-coefs_contract_no_ctrl <- extract_event_study_coefs(m1)
-coefs_contract_no_ctrl$Outcome <- "Contract without Controls"
-
-# Combine all results into one data frame
-df_combined <- dplyr::bind_rows(
-  coefs_lfp, coefs_employment, coefs_unemployment, coefs_contract,
-  coefs_lfp_no_ctrl, coefs_employment_no_ctrl, coefs_unemployment_no_ctrl, coefs_contract_no_ctrl
-)
-
-# Convert the `term` column to years
-df_combined <- df_combined |>
-  dplyr::mutate(Year = 2009 + period)
-
-# Split the data into separate data frames for each outcome with controls and without controls
-df_lfp_ctrl <- df_combined |> dplyr::filter(Outcome == "Labor Force Participation with Controls")
-df_lfp_no_ctrl <- df_combined |> dplyr::filter(Outcome == "Labor Force Participation without Controls")
-
-df_employment_ctrl <- df_combined |> dplyr::filter(Outcome == "Employment with Controls")
-df_employment_no_ctrl <- df_combined |> dplyr::filter(Outcome == "Employment without Controls")
-
-df_unemployment_ctrl <- df_combined |> dplyr::filter(Outcome == "Unemployment with Controls")
-df_unemployment_no_ctrl <- df_combined |> dplyr::filter(Outcome == "Unemployment without Controls")
-
-df_contract_ctrl <- df_combined |> dplyr::filter(Outcome == "Contract with Controls")
-df_contract_no_ctrl <- df_combined |> dplyr::filter(Outcome == "Contract without Controls")
-
-
-# Reshape the data frames and add significance stars
-reshape_data <- function(df_ctrl, df_no_ctrl, outcome) {
-  df_ctrl_wide <- df_ctrl |>
-    dplyr::select(Year, Coefficient, StdError) |>
-    dplyr::mutate(Coefficient = mapply(add_significance_stars, Coefficient, StdError)) |>
-    dplyr::rename(!!paste0(outcome, "_Ctrl_Coeff") := Coefficient,
-                  !!paste0(outcome, "_Ctrl_SE") := StdError)
-  
-  df_no_ctrl_wide <- df_no_ctrl |>
-    dplyr::select(Year, Coefficient, StdError) |>
-    dplyr::mutate(Coefficient = mapply(add_significance_stars, Coefficient, StdError)) |>
-    dplyr::rename(!!paste0(outcome, "_NoCtrl_Coeff") := Coefficient,
-                  !!paste0(outcome, "_NoCtrl_SE") := StdError)
-  
-  df_wide <- df_ctrl_wide |>
-    dplyr::left_join(df_no_ctrl_wide, by = "Year")
-  
-  return(df_wide)
-}
-
-df_lfp_wide <- reshape_data(df_lfp_ctrl, df_lfp_no_ctrl, "LFP")
-df_employment_wide <- reshape_data(df_employment_ctrl, df_employment_no_ctrl, "Employment")
-df_unemployment_wide <- reshape_data(df_unemployment_ctrl, df_unemployment_no_ctrl, "Unemployment")
-df_contract_wide <- reshape_data(df_contract_ctrl, df_contract_no_ctrl, "Contract")
-
-# Combine all the wide data frames into one
-df_final <- df_lfp_wide |>
-  dplyr::full_join(df_employment_wide, by = "Year") |>
-  dplyr::full_join(df_unemployment_wide, by = "Year") |>
-  dplyr::full_join(df_contract_wide, by = "Year")
-
-# Display the final table with kableExtra
-kable(df_final, caption = "Event Study Coefficients and Standard Errors by Year and Outcome") %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" " = 1, "Labor Force Participation" = 2, "Employment" = 2, "Unemployment" = 2, "Contract" = 2)) %>%
-  add_header_above(c(" " = 1, " " = 8)) %>%
-  row_spec(nrow(df_final) + 1, extra_css = "border-top: solid 1px;") %>%
-  add_row(df_final %>%
-            summarize(across(starts_with("LFP"), ~ "YES"), across(starts_with("Employment"), ~ "YES"), across(starts_with("Unemployment"), ~ "YES"), across(starts_with("Contract"), ~ "YES")),
-          col = "Controls") %>%
-  add_row(df_final %>%
-            summarize(across(starts_with("LFP"), ~ "16562"), across(starts_with("Employment"), ~ "16562"), across(starts_with("Unemployment"), ~ "16562"), across(starts_with("Contract"), ~ "16562")),
-          col = "N")
-
-```
-
-
-
 
 
 ```{r}
