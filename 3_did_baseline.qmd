@@ -119,11 +119,13 @@ plot5 <- functions$plot_mean(df_intensive, "log_hours")
 plot6 <- functions$plot_event_study(m2_hours, output_title = "Log Working Hours Event Study with Controls")
 
 # Arrange the plots into a 2x3 grid
-combined_plot <- grid.arrange(plot1, plot2, plot3, plot4, plot5, plot6, ncol = 2, nrow = 3)
+intensive_means_plot_combined <- grid.arrange(plot1, plot3, plot5, ncol = 3, nrow = 1)
+intensive_event_plot_combined <- grid.arrange(plot2, plot4, plot6, ncol = 3, nrow = 1)
 
 # Export the combined figure to a file
-ggsave("combined_plot_intensive.png", combined_plot, width = 18, height = 12)
+ggsave("intensive_means_plot_combined.png", intensive_means_plot_combined, width = 18, height = 12)
 
+ggsave("intensive_event_plot_combined.png", intensive_event_plot_combined, width = 18, height = 12)
 
 ```
 
@@ -236,11 +238,15 @@ plot12 <- functions$plot_event_study(m2_unemployment, output_title = "Unemployme
 plot13 <- functions$plot_mean(df_extensive, "contract")
 plot14 <- functions$plot_event_study(m2_contract, output_title = "Contract Event Study with Controls")
 
-
-combined_plot2 <- grid.arrange(plot7, plot8, plot9, plot10, plot11, plot12, plot13, plot14, ncol = 2, nrow = 4)
+# Arrange the plots into a 2x3 grid
+extensive_means_plot_combined <- grid.arrange(plot7, plot9, plot11, plot13, ncol = 4, nrow = 1)
+extensive_event_plot_combined <- grid.arrange(plot8, plot10, plot12, plot14, ncol = 4, nrow = 1)
 
 # Export the combined figure to a file
-ggsave("combined_plot_extensive.png", combined_plot2, width = 18, height = 12)
+ggsave("extensive_means_plot_combined.png", extensive_means_plot_combined, width = 18, height = 12)
+
+ggsave("extensive_event_plot_combined.png", extensive_event_plot_combined, width = 18, height = 12)
+
 ```
 
 
