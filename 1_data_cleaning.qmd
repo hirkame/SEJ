@@ -2,14 +2,17 @@
 library(tidyverse)
 library(haven)
 library(survey)
+
 ```
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_knit$set(root.dir = "C:/Users/Emily/OneDrive/Documents/Thesis/SEJ_6/1/data")
 
-
-## Preprocess
-
-
+```
+# Preprocess
 ```{r}
-raw_data <- read_dta("data/CASEN_allyears_v9.dta")
+
+raw_data <- read_dta("CASEN_allyears_v9.dta")
 
 df_casen <- as.data.frame(raw_data)
 
